@@ -26,11 +26,11 @@ public class EmailFacade
     /// <param name="userId"></param>
     /// <param name="activateCode"></param>
     /// <exception cref="Exception"></exception>
-    public async Task Invite(List<string> receiver, string subject, string content)
+    public async Task Invite(List<string> receiver, string subject, string content, string link, string buttonText)
     {
         try
         {
-            var message = new Message(receiver, subject, content);
+            var message = new Message(receiver, subject, content, link, buttonText);
 
             var emailMessage = await CreateEmailBody(message);
 
@@ -49,7 +49,7 @@ public class EmailFacade
     /// <param name="message"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-    private Task<MimeMessage> CreateEmailBody(Message message)
+    private async Task<MimeMessage> CreateEmailBody(Message message)
     {
         try
         {
@@ -61,12 +61,12 @@ public class EmailFacade
 
             emailMessage.Subject = message.Subject;
 
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text)
+            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                Text = message.Content
+                Text = await Template.GetBaseTemplate(message.Subject, message.Content, message.Link, message.ButtonText)
             };
 
-            return Task.FromResult(emailMessage);
+            return await Task.FromResult(emailMessage);
         }
         catch (Exception exception)
         {

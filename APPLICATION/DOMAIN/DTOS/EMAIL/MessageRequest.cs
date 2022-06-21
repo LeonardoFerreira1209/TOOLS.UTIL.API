@@ -7,7 +7,7 @@ namespace APPLICATION.DOMAIN.DTOS.EMAIL;
 /// </summary>
 public class Message
 {
-    public Message(IEnumerable<string> receiver, string subject, string content)
+    public Message(IEnumerable<string> receiver, string subject, string content, string link, string buttonText)
     {
         Receiver = new List<MailboxAddress>();
 
@@ -16,9 +16,15 @@ public class Message
         Subject = subject;
 
         Content = content;
+
+        Link = link;
+
+        ButtonText = buttonText;
     }
 
     public List<MailboxAddress> Receiver { get; set; }
     public string Subject { get; set; }
     public string Content { get; set; }
+    public string Link { get; set; }
+    public string ButtonText { get; set; }
 }

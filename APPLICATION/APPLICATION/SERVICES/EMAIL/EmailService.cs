@@ -34,7 +34,7 @@ public class EmailService : IEmailService
 
         try
         {
-            await _emailFacade.Invite(request.Receivers, request.Subject, request.Content);
+            await _emailFacade.Invite(request.Receivers, request.Subject, request.Content, request.Link, request.ButtonText);
 
             return new ApiResponse<object>(true, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.SuccessOK, "Email enviado com sucesso.") });
         }

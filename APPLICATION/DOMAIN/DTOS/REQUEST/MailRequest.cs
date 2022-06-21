@@ -19,4 +19,14 @@ public class MailRequest
     /// Conteudo do e-mail (texto).
     /// </summary>
     public string Content { get; set; }
+
+    /// <summary>
+    /// link do botão
+    /// </summary>
+    public string Link { get; set; } = "#";
+
+    /// <summary>
+    /// texto do botão
+    /// </summary>
+    public string ButtonText { get; set; }
 }
