@@ -63,7 +63,7 @@ public class EmailFacade
 
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                Text = await Template.GetBaseTemplate(message.Subject, message.Content, message.Link, message.ButtonText)
+                Text = await Template.TemplateWelcome(message.Subject, message.Content, message.Link, message.ButtonText)
             };
 
             return await Task.FromResult(emailMessage);

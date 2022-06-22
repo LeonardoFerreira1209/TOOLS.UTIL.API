@@ -121,8 +121,7 @@ public static class ExtensionsConfigurations
             .AddTransient<IEmailService, EmailService>()
             // Facades
             .AddSingleton<EmailFacade, EmailFacade>();
-        // Facades
-        //Repositories
+            //Repositories
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -203,13 +202,10 @@ public static class ExtensionsConfigurations
             c.RouteTemplate = "swagger/{documentName}/swagger.json";
         });
 
-        application
-            .UseSwaggerUI(swagger =>
-            {
-                swagger.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"{apiVersion}");
-
-                //swagger.InjectStylesheet("/swagger-custom/swagger-custom-styles.css");
-            });
+        application.UseSwaggerUI(swagger =>
+        {
+            swagger.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"{apiVersion}");
+        });
 
         application
             .UseMvcWithDefaultRoute();

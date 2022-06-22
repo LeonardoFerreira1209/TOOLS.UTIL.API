@@ -48,7 +48,6 @@ try
         .ConfigureHealthChecks()
         .UseDefaultFiles()
         .UseStaticFiles()
-        .UseHttpsRedirection()
         .UseHttpsRedirection();
 
     // Chamando as configurações de Minimal APIS.
