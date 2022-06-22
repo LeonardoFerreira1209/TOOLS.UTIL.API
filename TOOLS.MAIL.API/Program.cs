@@ -27,6 +27,7 @@ try
         .AddEndpointsApiExplorer()
         .AddOptions()
         .ConfigureLanguage()
+        .ConfigureContexto(configurations)
         .ConfigureSwagger(configurations)
         .ConfigureDependencies(configurations)
         .ConfigureHealthChecks(configurations)

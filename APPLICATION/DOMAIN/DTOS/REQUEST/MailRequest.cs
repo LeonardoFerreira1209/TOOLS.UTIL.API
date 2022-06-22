@@ -16,6 +16,11 @@ public class MailRequest
     public string Subject { get; set; }
 
     /// <summary>
+    /// Nome do template
+    /// </summary>
+    public string TemplateName { get; set; }
+
+    /// <summary>
     /// Conteudo do e-mail (texto).
     /// </summary>
     public string Content { get; set; }

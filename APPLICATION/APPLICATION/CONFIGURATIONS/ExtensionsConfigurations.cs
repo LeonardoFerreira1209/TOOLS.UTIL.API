@@ -1,14 +1,20 @@
 ﻿using APPLICATION.APPLICATION.CONFIGURATIONS.SWAGGER;
 using APPLICATION.APPLICATION.SERVICES.EMAIL;
+using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
+using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
 using APPLICATION.DOMAIN.DTOS.REQUEST;
+using APPLICATION.DOMAIN.DTOS.RESPONSE;
 using APPLICATION.DOMAIN.UTILS;
+using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
+using APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 using HotChocolate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -75,6 +81,19 @@ public static class ExtensionsConfigurations
     }
 
     /// <summary>
+    /// Configuração do banco de dados do sistema.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureContexto(this IServiceCollection services, IConfiguration configurations)
+    {
+        services
+            .AddDbContext<Contexto>(options => options.UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
+
+        return services;
+    }
+
+    /// <summary>
     /// Configuração do swagger do sistema.
     /// </summary>
     /// <param name="services"></param>
@@ -119,9 +138,11 @@ public static class ExtensionsConfigurations
             .AddTransient(x => configurations)
             // Services
             .AddTransient<IEmailService, EmailService>()
+            .AddTransient<ITemplateService, TemplateService>()
             // Facades
-            .AddSingleton<EmailFacade, EmailFacade>();
-            //Repositories
+            .AddSingleton<EmailFacade, EmailFacade>()
+            // Repositories
+            .AddSingleton<ITemplateRepository, TemplateRepository>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -205,6 +226,7 @@ public static class ExtensionsConfigurations
         application.UseSwaggerUI(swagger =>
         {
             swagger.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"{apiVersion}");
+            swagger.DefaultModelExpandDepth(0);
         });
 
         application
@@ -223,9 +245,9 @@ public static class ExtensionsConfigurations
         #region Mail's
         application.MapPost("/mail/invite",
         [AllowAnonymous][SwaggerOperation(Summary = "Criar uauário.", Description = "Método responsavel por criar usuário")]
-        //[ProducesResponseType(typeof(ApiResponse<TokenJWT>), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(ApiResponse<TokenJWT>), StatusCodes.Status400BadRequest)] 
-        //[ProducesResponseType(typeof(ApiResponse<TokenJWT>), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         async ([Service] IEmailService emailService, MailRequest request) =>
         {
             using (LogContext.PushProperty("Controller", "MailController"))
@@ -235,6 +257,29 @@ public static class ExtensionsConfigurations
                 return await Tracker.Time(() => emailService.Invite(request), "Enviar e-mail");
             }
         });
+        #endregion
+
+        #region Templates
+        application.MapPost("templates/save",
+        [AllowAnonymous][SwaggerOperation(Summary = "Salvar modelos de templates no banco de dados.", Description = "Método responsavel por salvar templates no banco de dados.")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        async ([Service] ITemplateService templateService, string name, string description, HttpRequest request) =>
+        {
+            using (var reader = new StreamReader(request.Body, System.Text.Encoding.UTF8))
+            {
+                string fileContent = await reader.ReadToEndAsync();
+
+                using (LogContext.PushProperty("Controller", "MailController"))
+                using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new List<string> { name, description, fileContent })))
+                using (LogContext.PushProperty("Metodo", "Save Templates"))
+                {
+                    return await Tracker.Time(() => templateService.Save(name, description, fileContent), "Salvar template");
+                }
+            }
+
+        }).Accepts<IFormFile>("text/plain").Produces(200);
         #endregion
 
         return application;
