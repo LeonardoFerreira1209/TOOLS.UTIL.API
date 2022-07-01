@@ -12,6 +12,7 @@ using APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 using HotChocolate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -244,7 +245,7 @@ public static class ExtensionsConfigurations
     {
         #region Mail's
         application.MapPost("/mail/invite",
-        [AllowAnonymous][SwaggerOperation(Summary = "Criar uauário.", Description = "Método responsavel por criar usuário")]
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Criar uauário.", Description = "Método responsavel por criar usuário")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -261,7 +262,7 @@ public static class ExtensionsConfigurations
 
         #region Templates
         application.MapPost("templates/save",
-        [AllowAnonymous][SwaggerOperation(Summary = "Salvar modelos de templates no banco de dados.", Description = "Método responsavel por salvar templates no banco de dados.")]
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Salvar modelos de templates no banco de dados.", Description = "Método responsavel por salvar templates no banco de dados.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
