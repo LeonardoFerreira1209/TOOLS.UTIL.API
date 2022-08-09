@@ -23,6 +23,8 @@ try
         .ConfigureContexto(configurations)
         .ConfigureSwagger(configurations)
         .ConfigureDependencies(configurations)
+        .ConfigureTelemetry(configurations)
+        .ConfigureApplicationInsights(configurations)
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
         .AddControllers(options =>

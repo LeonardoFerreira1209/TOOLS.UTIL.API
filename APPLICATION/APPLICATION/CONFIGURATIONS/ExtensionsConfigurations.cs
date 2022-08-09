@@ -43,8 +43,6 @@ public static class ExtensionsConfigurations
 
     private static string _applicationInsightsKey;
 
-    private static string _connectionStringApplicationInsightsKey;
-
     private static TelemetryConfiguration _telemetryConfig;
 
     private static TelemetryClient _telemetryClient;
@@ -120,6 +118,28 @@ public static class ExtensionsConfigurations
     }
 
     /// <summary>
+    /// Configuração de App Insights
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureApplicationInsights(this IServiceCollection services, IConfiguration configuration)
+    {
+        var metrics = new ApplicationInsightsMetrics(_telemetryClient, _applicationInsightsKey);
+
+        var applicationInsightsServiceOptions = new ApplicationInsightsServiceOptions
+        {
+            ConnectionString = configuration.GetSection("ApplicationInsights:ConnectionStringApplicationInsightsKey").Value
+        };
+
+        services
+            .AddApplicationInsightsTelemetry(applicationInsightsServiceOptions)
+            .AddTransient(x => metrics)
+            .AddTransient<IApplicationInsightsMetrics>(x => metrics);
+
+        return services;
+    }
+
+    /// <summary>
     /// Configuração do banco de dados do sistema.
     /// </summary>
     /// <param name="services"></param>
@@ -128,28 +148,6 @@ public static class ExtensionsConfigurations
     {
         services
             .AddDbContext<Contexto>(options => options.UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
-
-        return services;
-    }
-
-    /// <summary>
-    /// Configuração de App Insights
-    /// </summary>
-    /// <param name="services"></param>
-    /// <returns></returns>
-    public static IServiceCollection ConfigureApplicationInsights(this IServiceCollection services)
-    {
-        var metrics = new ApplicationInsightsMetrics(_telemetryClient, _applicationInsightsKey);
-
-        var applicationInsightsServiceOptions = new ApplicationInsightsServiceOptions
-        {
-            ConnectionString = _connectionStringApplicationInsightsKey
-        };
-
-        services
-            .AddApplicationInsightsTelemetry(applicationInsightsServiceOptions)
-            .AddTransient(x => metrics)
-            .AddTransient<IApplicationInsightsMetrics>(x => metrics);
 
         return services;
     }
