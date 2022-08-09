@@ -91,7 +91,7 @@ public class EmailFacade
 
         try
         {
-            await client.ConnectAsync(_appsettings.Value.Email.SmtpServer, _appsettings.Value.Email.Port, true);
+            await client.ConnectAsync(_appsettings.Value.Email.SmtpServer, _appsettings.Value.Email.Port, false);
 
             client.AuthenticationMechanisms.Remove("XOAUTH2");
 
