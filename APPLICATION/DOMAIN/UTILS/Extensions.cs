@@ -1,4 +1,5 @@
 ﻿using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.DOMAIN.ENUM;
 using APPLICATION.ENUMS;
 using FluentValidation.Results;
@@ -77,7 +78,7 @@ public static class Extensions
 
         foreach (var erro in resultado.Errors)
         {
-            erros.Add(new DadosNotificacao((StatusCodes)Convert.ToInt32(erro.ErrorCode), erro.ErrorMessage));
+            erros.Add(new DadosNotificacao(erro.ErrorMessage));
         }
 
         return erros;

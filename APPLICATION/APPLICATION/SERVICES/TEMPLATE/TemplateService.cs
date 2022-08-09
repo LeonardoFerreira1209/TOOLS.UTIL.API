@@ -1,7 +1,8 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
-using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using APPLICATION.DOMAIN.ENUM;
 using Microsoft.Extensions.Options;
 using Serilog;
 
@@ -36,15 +37,18 @@ public class TemplateService : ITemplateService
 
         try
         {
+            // Save the template in database.
             await _templateRepository.Save(name, description, fileContent);
 
-            return new ApiResponse<object>(true, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.SuccessOK, "Template cadastrado com sucesso.") });
+            // Response success.
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK, new List<DadosNotificacao> { new DadosNotificacao("Template cadastrado com sucesso.") });
         }
         catch (Exception exception)
         {
             Log.Error("[LOG ERROR]", exception, exception.Message);
 
-            return new ApiResponse<object>(false, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.ErrorBadRequest, exception.Message) });
+            // Response error.
+            return new ApiResponse<object>(false, StatusCodes.ErrorBadRequest, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 
@@ -59,17 +63,21 @@ public class TemplateService : ITemplateService
 
         try
         {
-            var contet = await _templateRepository.GetContentTemplateWithName(name);
+            // Get template.
+            var content = await _templateRepository.GetContentTemplateWithName(name);
 
-            if (contet is not null) return new ApiResponse<string>(true, contet, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.SuccessOK, "Template cadastrado com sucesso.") });
+            // Is not null -> Response success.
+            if (content is not null) return new ApiResponse<string>(true, StatusCodes.SuccessOK, content, new List<DadosNotificacao> { new DadosNotificacao("Template cadastrado com sucesso.") });
 
-            return new ApiResponse<string>(false, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.ErrorBadRequest, "Nenhum template encontrado.") });
+            // Response error.
+            return new ApiResponse<string>(false, StatusCodes.ErrorBadRequest, new List<DadosNotificacao> { new DadosNotificacao("Nenhum template encontrado.") });
         }
         catch (Exception exception)
         {
             Log.Error("[LOG ERROR]", exception, exception.Message);
 
-            return new ApiResponse<string>(false, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.ErrorBadRequest, exception.Message) });
+            // Response error.
+            return new ApiResponse<string>(false, StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 }

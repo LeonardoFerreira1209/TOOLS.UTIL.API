@@ -1,4 +1,5 @@
 ﻿using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.DOMAIN.ENUM;
 using FluentValidation.Results;
 
@@ -13,7 +14,7 @@ namespace APPLICATION.APPLICATION.CONFIGURATIONS
         {
             var _notificacoes = new List<DadosNotificacao>();
 
-            foreach (var erro in validationResult.Errors) _notificacoes.Add(new DadosNotificacao(StatusCodes.ErrorBadRequest, erro.ErrorMessage));
+            foreach (var erro in validationResult.Errors) _notificacoes.Add(new DadosNotificacao(erro.ErrorMessage));
 
             return new ApiResponse<object>
             {

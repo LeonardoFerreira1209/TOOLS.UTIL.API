@@ -2,6 +2,8 @@
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
 using APPLICATION.DOMAIN.DTOS.REQUEST;
 using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using APPLICATION.DOMAIN.ENUM;
 using APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -36,13 +38,13 @@ public class EmailService : IEmailService
         {
             await _emailFacade.Invite(request.Receivers, request.TemplateName, request.Subject, request.Content, request.Link, request.ButtonText);
 
-            return new ApiResponse<object>(true, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.SuccessOK, "Email enviado com sucesso.") });
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK ,new List<DadosNotificacao> { new DadosNotificacao("Email enviado com sucesso.") });
         }
         catch (Exception exception)
         {
             Log.Error("[LOG ERROR]", exception, exception.Message);
 
-            return new ApiResponse<object>(false, new List<DadosNotificacao> { new DadosNotificacao(DOMAIN.ENUM.StatusCodes.ErrorBadRequest, exception.Message) });
+            return new ApiResponse<object>(false, StatusCodes.ServerErrorInternalServerError ,new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 }

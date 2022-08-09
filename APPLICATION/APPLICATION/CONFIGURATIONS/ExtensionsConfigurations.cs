@@ -1,15 +1,21 @@
-﻿using APPLICATION.APPLICATION.CONFIGURATIONS.SWAGGER;
+﻿using APPLICATION.APPLICATION.CONFIGURATIONS.APPLICATIONINSIGHTS;
+using APPLICATION.APPLICATION.CONFIGURATIONS.SWAGGER;
 using APPLICATION.APPLICATION.SERVICES.EMAIL;
 using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
+using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS;
+using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
 using APPLICATION.DOMAIN.DTOS.REQUEST;
-using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.DOMAIN.UTILS;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
 using APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 using HotChocolate;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.AspNetCore.Extensions;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors;
@@ -35,32 +41,39 @@ public static class ExtensionsConfigurations
 {
     public static readonly string HealthCheckEndpoint = "/application/healthcheck";
 
+    private static string _applicationInsightsKey;
+
+    private static string _connectionStringApplicationInsightsKey;
+
+    private static TelemetryConfiguration _telemetryConfig;
+
+    private static TelemetryClient _telemetryClient;
+
     /// <summary>
     /// Configuração de Logs do sistema.
     /// </summary>
     /// <param name="services"></param>
     /// <returns></returns>
-    public static WebApplicationBuilder ConfigureSerilog(this WebApplicationBuilder applicationBuilder)
+    public static IServiceCollection ConfigureSerilog(this IServiceCollection services)
     {
-        Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+        Log.Logger = new LoggerConfiguration()
+                                 .MinimumLevel.Debug()
+                                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                                 .MinimumLevel.Override("System", LogEventLevel.Error)
+                                 .Enrich.FromLogContext()
+                                 .Enrich.WithEnvironmentUserName()
+                                 .Enrich.WithMachineName()
+                                 .Enrich.WithProcessId()
+                                 .Enrich.WithProcessName()
+                                 .Enrich.WithThreadId()
+                                 .Enrich.WithThreadName()
+                                 .WriteTo.Console()
+                                 .WriteTo.ApplicationInsights(_telemetryConfig, TelemetryConverter.Traces, LogEventLevel.Information)
+                                 .CreateLogger();
+        services
+            .AddTransient<ILogWithMetric, LogWithMetric>();
 
-        applicationBuilder.Host.UseSerilog((context, config) =>
-        {
-            config
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("System", LogEventLevel.Error)
-            .Enrich.FromLogContext()
-            .Enrich.WithEnvironmentUserName()
-            .Enrich.WithMachineName()
-            .Enrich.WithProcessId()
-            .Enrich.WithProcessName()
-            .Enrich.WithThreadId()
-            .Enrich.WithThreadName()
-            .WriteTo.Console();
-        });
-
-        return applicationBuilder;
+        return services;
     }
 
     /// <summary>
@@ -82,6 +95,31 @@ public static class ExtensionsConfigurations
     }
 
     /// <summary>
+    /// Configuração de métricas
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureTelemetry(this IServiceCollection services, IConfiguration configuration)
+    {
+        var httpContextAccessor = services.BuildServiceProvider().GetService<IHttpContextAccessor>();
+
+        _telemetryConfig = TelemetryConfiguration.CreateDefault();
+
+        _telemetryConfig.ConnectionString = configuration.GetSection("ApplicationInsights:ConnectionStringApplicationInsightsKey").Value;
+
+        _telemetryConfig.TelemetryInitializers.Add(new ApplicationInsightsInitializer(configuration, httpContextAccessor));
+
+        _telemetryClient = new TelemetryClient(_telemetryConfig);
+
+        services
+            .AddSingleton<ITelemetryInitializer>(x => new ApplicationInsightsInitializer(configuration, httpContextAccessor))
+            .AddSingleton<ITelemetryProxy>(x => new TelemetryProxy(_telemetryClient));
+
+        return services;
+    }
+
+    /// <summary>
     /// Configuração do banco de dados do sistema.
     /// </summary>
     /// <param name="services"></param>
@@ -90,6 +128,28 @@ public static class ExtensionsConfigurations
     {
         services
             .AddDbContext<Contexto>(options => options.UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configuração de App Insights
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureApplicationInsights(this IServiceCollection services)
+    {
+        var metrics = new ApplicationInsightsMetrics(_telemetryClient, _applicationInsightsKey);
+
+        var applicationInsightsServiceOptions = new ApplicationInsightsServiceOptions
+        {
+            ConnectionString = _connectionStringApplicationInsightsKey
+        };
+
+        services
+            .AddApplicationInsightsTelemetry(applicationInsightsServiceOptions)
+            .AddTransient(x => metrics)
+            .AddTransient<IApplicationInsightsMetrics>(x => metrics);
 
         return services;
     }
@@ -113,13 +173,16 @@ public static class ExtensionsConfigurations
                 Version = apiVersion,
                 Title = $"{apiDescription} - {apiVersion}",
                 Description = apiDescription,
-
                 Contact = new OpenApiContact
                 {
                     Name = "HYPER.IO DESENVOLVIMENTOS LTDA",
                     Email = "HYPER.IO@OUTLOOK.COM",
                 },
-
+                License = new OpenApiLicense
+                {
+                    Name = "HYPER.IO LICENSE",
+                },
+                TermsOfService = new Uri(uriMyGit)
             });
 
             swagger.DocumentFilter<HealthCheckSwagger>();
@@ -135,6 +198,15 @@ public static class ExtensionsConfigurations
     /// <returns></returns>
     public static IServiceCollection ConfigureDependencies(this IServiceCollection services, IConfiguration configurations)
     {
+        if (string.IsNullOrEmpty(configurations.GetValue<string>("ApplicationInsights:InstrumentationKey")))
+        {
+            var argNullEx = new ArgumentNullException("AppInsightsKey não pode ser nulo.", new Exception("Parametro inexistente.")); throw argNullEx;
+        }
+        else
+        {
+            _applicationInsightsKey = configurations.GetValue<string>("ApplicationInsights:InstrumentationKey");
+        }
+
         services
             .AddTransient(x => configurations)
             // Services
@@ -173,7 +245,10 @@ public static class ExtensionsConfigurations
     {
         return services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            options.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed((host) => true).AllowCredentials();
+            });
         });
     }
 
@@ -224,11 +299,11 @@ public static class ExtensionsConfigurations
             c.RouteTemplate = "swagger/{documentName}/swagger.json";
         });
 
-        application.UseSwaggerUI(swagger =>
-        {
-            swagger.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"{apiVersion}");
-            swagger.DefaultModelExpandDepth(0);
-        });
+        application
+            .UseSwaggerUI(swagger =>
+            {
+                swagger.SwaggerEndpoint($"/swagger/{apiVersion}/swagger.json", $"{apiVersion}");
+            });
 
         application
             .UseMvcWithDefaultRoute();
