@@ -115,8 +115,8 @@ jobs:
           ConnectionStrings.BaseDados: ${{ secrets.__CONNECTION_STRING_DATABASE__ }}
           ApplicationInsights.InstrumentationKey: ${{ secrets.__APPINSIGHTS_INSTRUMENTATION_KEY__ }}
           ApplicationInsights.ConnectionStringApplicationInsightsKey: ${{ secrets.__CONNECTION_STRING_APPLICATION_INSIGHTS_KEY__ }}
-          Email.From: ${{ secrets.__GOOGLE_EMAIL__ }}
-          Email.Password: ${{ secrets.__GOOGLE_PASSWORD__ }}
+          Email.From: ${{ secrets.__EMAIL__ }}
+          Email.Password: ${{ secrets.__PASSWORD__ }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
