@@ -11,7 +11,7 @@ using Serilog;
 namespace APPLICATION.APPLICATION.SERVICES.EMAIL;
 
 /// <summary>
-/// Serviço de usuários.
+/// Serviço de email.
 /// </summary>
 public class EmailService : IEmailService
 {
@@ -26,7 +26,7 @@ public class EmailService : IEmailService
     }
 
     /// <summary>
-    /// Método responsável por fazer a authorização do usuário.
+    /// Método responsável por fazer aenvio de email.
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
@@ -38,11 +38,13 @@ public class EmailService : IEmailService
         {
             await _emailFacade.Invite(request.Receivers, request.TemplateName, request.Subject, request.Content, request.Link, request.ButtonText);
 
+            Log.Information($"[LOG INFORMATION] - E-mail enviado com sucesso.\n");
+
             return new ApiResponse<object>(true, StatusCodes.SuccessOK ,new List<DadosNotificacao> { new DadosNotificacao("Email enviado com sucesso.") });
         }
         catch (Exception exception)
         {
-            Log.Error("[LOG ERROR]", exception, exception.Message);
+            Log.Error("[LOG ERROR]\n", exception, exception.Message);
 
             return new ApiResponse<object>(false, StatusCodes.ServerErrorInternalServerError ,new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }

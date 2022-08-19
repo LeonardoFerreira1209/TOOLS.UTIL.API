@@ -11,7 +11,7 @@ public class Message
     {
         Receiver = new List<MailboxAddress>();
 
-        Receiver.AddRange(receiver.Select(r => new MailboxAddress("receiver", r)));
+        Receiver.AddRange(receiver.Select(r => new MailboxAddress("Leo.Almeida", r)));
 
         Subject = subject;
 

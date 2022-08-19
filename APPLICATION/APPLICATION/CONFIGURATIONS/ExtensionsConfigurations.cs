@@ -34,6 +34,8 @@ using Serilog.Events;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Globalization;
 using System.Net.Mime;
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
 
 namespace APPLICATION.APPLICATION.CONFIGURATIONS;
 
@@ -208,6 +210,7 @@ public static class ExtensionsConfigurations
         services
             .AddTransient(x => configurations)
             // Services
+            .AddTransient<ISmsService, SmsService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITemplateService, TemplateService>()
             // Facades
@@ -314,11 +317,11 @@ public static class ExtensionsConfigurations
     /// </summary>
     /// <param name="applicationBuilder"></param>
     /// <returns></returns>
-    public static WebApplication UseMinimalAPI(this WebApplication application, IConfiguration configurations)
+    public static WebApplication UseMinimalAPI(this WebApplication application)
     {
         #region Mail's
         application.MapPost("/mail/invite",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Criar uauário.", Description = "Método responsavel por criar usuário")]
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar e-mail para usuário.", Description = "Método responsavel por enviar um e-mail.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
@@ -334,7 +337,7 @@ public static class ExtensionsConfigurations
         #endregion
 
         #region Templates
-        application.MapPost("templates/save",
+        application.MapPost("/mail/templates/save",
         [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Salvar modelos de templates no banco de dados.", Description = "Método responsavel por salvar templates no banco de dados.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -354,6 +357,24 @@ public static class ExtensionsConfigurations
             }
 
         }).Accepts<IFormFile>("text/plain").Produces(200);
+        #endregion
+
+        #region Sms's
+        application.MapPost("/sms/invite",
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar sms.", Description = "Método responsavel por enviar sms.")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        async ([Service] ISmsService smsService, SmsRequest request) =>
+        {
+            using (LogContext.PushProperty("Controller", "SmsController"))
+            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
+            using (LogContext.PushProperty("Metodo", "Invite"))
+            {
+                return await Tracker.Time(() => smsService.Invite(request), "Enviar sms.");
+            }
+
+        });
         #endregion
 
         return application;

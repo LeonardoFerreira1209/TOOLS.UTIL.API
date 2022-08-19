@@ -25,6 +25,7 @@ try
         .ConfigureDependencies(configurations)
         .ConfigureTelemetry(configurations)
         .ConfigureApplicationInsights(configurations)
+        .ConfigureSerilog()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
         .AddControllers(options =>
@@ -49,7 +50,7 @@ try
         .UseSwaggerConfigurations(configurations);
 
     // Chamando as configurações de Minimal APIS.
-    applicationbuilder.UseMinimalAPI(configurations);
+    applicationbuilder.UseMinimalAPI();
 
     Log.Information($"[LOG INFORMATION] - Inicializando aplicação [TOOLS.MAIL.API]\n");
 
