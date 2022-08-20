@@ -3,7 +3,7 @@
 /// <summary>
 /// Classe de recebimento de parametos para o envio do sms.
 /// </summary>
-public class SmsRequest
+public class MessageRequest
 {
     /// <summary>
     /// Número do celular.

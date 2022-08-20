@@ -2,10 +2,12 @@
 using APPLICATION.APPLICATION.CONFIGURATIONS.SWAGGER;
 using APPLICATION.APPLICATION.SERVICES.EMAIL;
 using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
+using APPLICATION.APPLICATION.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
+using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.DTOS.REQUEST;
 using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.DOMAIN.UTILS;
@@ -210,7 +212,7 @@ public static class ExtensionsConfigurations
         services
             .AddTransient(x => configurations)
             // Services
-            .AddTransient<ISmsService, SmsService>()
+            .AddTransient<ITwillioService, TwillioService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITemplateService, TemplateService>()
             // Facades
@@ -359,22 +361,38 @@ public static class ExtensionsConfigurations
         }).Accepts<IFormFile>("text/plain").Produces(200);
         #endregion
 
-        #region Sms's
-        application.MapPost("/sms/invite",
+        #region Twillio
+        application.MapPost("twillio/sms/invite",
         [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar sms.", Description = "Método responsavel por enviar sms.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] ISmsService smsService, SmsRequest request) =>
+        async ([Service] ITwillioService smsService, MessageRequest request) =>
         {
             using (LogContext.PushProperty("Controller", "SmsController"))
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-            using (LogContext.PushProperty("Metodo", "Invite"))
+            using (LogContext.PushProperty("Metodo", "Sms"))
             {
-                return await Tracker.Time(() => smsService.Invite(request), "Enviar sms.");
+                return await Tracker.Time(() => smsService.Sms(request), "Enviar sms.");
             }
 
         });
+
+        application.MapPost("twillio/whatsapp/invite",
+       [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar whatsapp.", Description = "Método responsavel por enviar mensagem por whatsapp.")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        async ([Service] ITwillioService smsService, MessageRequest request) =>
+       {
+           using (LogContext.PushProperty("Controller", "WhatsappController"))
+           using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
+           using (LogContext.PushProperty("Metodo", "Whatsapp"))
+           {
+               return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar whatsapp.");
+           }
+
+       });
         #endregion
 
         return application;

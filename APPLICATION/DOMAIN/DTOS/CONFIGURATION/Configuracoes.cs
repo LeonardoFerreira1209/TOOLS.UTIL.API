@@ -10,7 +10,7 @@ public class AppSettings
     public Configuracoes Configuracoes { get; set; }
     public RetryPolicy RetryPolicy { get; set; }
     public Email Email { get; set; }
-    public Sms Sms { get; set; }
+    public Twillio Twillio { get; set; }
 }
 
 public class RetryPolicy
@@ -50,7 +50,7 @@ public class Email
     public string Password { get; set; }
 }
 
-public class Sms
+public class Twillio
 {
     public string TwillioPhoneNumber { get; set; }
     public string TwillioAccountSID { get; set; }
