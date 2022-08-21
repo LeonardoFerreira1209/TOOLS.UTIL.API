@@ -374,7 +374,23 @@ public static class ExtensionsConfigurations
             {
                 return await Tracker.Time(() => smsService.Sms(request), "Enviar sms");
             }
+        });
 
+        application.MapPost("twillio/sms/status",
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Status do sms.", Description = "Método responsavel por receber o status do sms.")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        async ([Service] ITwillioService smsService, StatusSmsRequest request) =>
+        {
+            using (LogContext.PushProperty("Controller", "SmsController"))
+            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
+            using (LogContext.PushProperty("Metodo", "StatusSms"))
+            {
+                Log.Information($"Status sms {JsonConvert.SerializeObject(request)}");
+
+                //return await Tracker.Time(() => smsService.Sms(request), "Status sms");
+            }
         });
 
         application.MapPost("twillio/whatsapp/invite",
@@ -390,7 +406,6 @@ public static class ExtensionsConfigurations
            {
                return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar mensagem para whatsapp");
            }
-
         });
         #endregion
 
