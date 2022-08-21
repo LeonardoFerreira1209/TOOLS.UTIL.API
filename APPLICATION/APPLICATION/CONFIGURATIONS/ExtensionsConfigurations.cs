@@ -372,7 +372,7 @@ public static class ExtensionsConfigurations
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
             using (LogContext.PushProperty("Metodo", "Sms"))
             {
-                return await Tracker.Time(() => smsService.Sms(request), "Enviar sms.");
+                return await Tracker.Time(() => smsService.Sms(request), "Enviar sms");
             }
 
         });
@@ -388,32 +388,8 @@ public static class ExtensionsConfigurations
            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
            using (LogContext.PushProperty("Metodo", "Whatsapp"))
            {
-               return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar mensagem para whatsapp.");
+               return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar mensagem para whatsapp");
            }
-
-        });
-
-        application.MapPost("twillio/whatsapp/receiver",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Receber mensagem do whatsapp.", Description = "Método responsavel por receber mensagem do whatsapp.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] ITwillioService smsService, MessageRequest request) =>
-        {
-           using (LogContext.PushProperty("Controller", "WhatsappController"))
-           using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-           using (LogContext.PushProperty("Metodo", "WhatsappReceiver"))
-           {
-                Log.Information("Mensagem recebida");
-
-                var response = new MessagingResponse();
-                response.Message("Hello World");
-                //return TwiML(response);
-
-                //Log.Information(JsonConvert.DeserializeObject(response.));
-
-                //return await Tracker.Time(() => smsService.Whatsapp(request), "Recebere mensagem do whatsapp.");
-            }
 
         });
         #endregion
