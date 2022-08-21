@@ -44,4 +44,9 @@ public class StatusSmsRequest
     /// Versão da API da twillio.
     /// </summary>
     public string ApiVersion { get; set; }
+
+    /// <summary>
+    /// Corpo da mensagem.
+    /// </summary>
+    public string Body { get; set; }
 }

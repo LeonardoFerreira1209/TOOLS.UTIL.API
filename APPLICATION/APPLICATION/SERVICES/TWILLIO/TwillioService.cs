@@ -62,19 +62,55 @@ public class TwillioService : ITwillioService
         {
             var statusSms = new StatusSmsRequest
             {
-                SmsSid = formCollection["MessageSid"],
+                SmsSid = formCollection["SmsSid"],
                 MessageStatus = formCollection["MessageStatus"],
                 AccountSid = formCollection["AccountSid"],
                 SmsStatus = formCollection["SmsStatus"],
                 From = formCollection["From"],
                 To = formCollection["To"],
                 MessageId = formCollection["MessageId"],
-                ApiVersion = formCollection["ApiVersion"]
+                ApiVersion = formCollection["ApiVersion"],
+                Body = formCollection["Body"]
             };
 
             Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
 
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.") });
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
+
+            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+        }
+    }
+
+    /// <summary>
+    /// Método responsavel por receber um status de sms.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<ApiResponse<object>> WhatsappStatus(IFormCollection formCollection)
+    {
+        Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TwillioService)} - METHOD {nameof(WhatsappStatus)}\n");
+
+        try
+        {
+            var statusSms = new StatusSmsRequest
+            {
+                SmsSid = formCollection["SmsSid"],
+                MessageStatus = formCollection["MessageStatus"],
+                AccountSid = formCollection["AccountSid"],
+                SmsStatus = formCollection["SmsStatus"],
+                From = formCollection["From"],
+                To = formCollection["To"],
+                MessageId = formCollection["MessageId"],
+                ApiVersion = formCollection["ApiVersion"],
+                Body = formCollection["Body"]
+            };
+
+            Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
+
+            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.") });
         }
         catch (Exception exception)
         {
@@ -97,7 +133,7 @@ public class TwillioService : ITwillioService
         {
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
-            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:{_appsettings.Value.Twillio.TwillioWhatsappNumber}"), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/sms/status"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
+            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:{_appsettings.Value.Twillio.TwillioWhatsappNumber}"), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/whatsapp/status"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
 
             Log.Information($"[LOG INFORMATION] - Whatsapp enviado com sucesso.\n");
 

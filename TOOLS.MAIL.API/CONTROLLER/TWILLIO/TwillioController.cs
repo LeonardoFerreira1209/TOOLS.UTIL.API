@@ -56,9 +56,26 @@ namespace TOOLS.MAIL.API.CONTROLLER.TWILLIO
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(null)))
             using (LogContext.PushProperty("Metodo", "StatusSms"))
             {
-                Log.Information(JsonConvert.SerializeObject(Request.Form));
-
                 return await Tracker.Time(() => _twillioService.SmsStatus(Request.Form), "Status sms recebido");
+            }
+        }
+
+        /// <summary>
+        /// Endpoint responsavel por receber o status do whatsapp.
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("whatsapp/status")][EnableCors("CorsPolicy")]
+        [SwaggerOperation(Summary = "Status do whatsapp.", Description = "Método responsavel por receber o status do whatsapp.")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        public async Task<ApiResponse<object>> WhatsappStatus()
+        {
+            using (LogContext.PushProperty("Controller", "WhatsappController"))
+            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(null)))
+            using (LogContext.PushProperty("Metodo", "StatusWhatsapp"))
+            {
+                return await Tracker.Time(() => _twillioService.WhatsappStatus(Request.Form), "Status whatsapp recebido");
             }
         }
 

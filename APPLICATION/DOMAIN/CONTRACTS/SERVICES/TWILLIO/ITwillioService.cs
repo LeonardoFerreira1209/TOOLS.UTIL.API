@@ -21,6 +21,12 @@ public interface ITwillioService
     Task<ApiResponse<object>> SmsStatus(IFormCollection formCollection);
 
     /// <summary>
+    /// Método responsavel por receber um status de sms.
+    /// </summary>
+    /// <returns></returns>
+    Task<ApiResponse<object>> WhatsappStatus(IFormCollection formCollection);
+
+    /// <summary>
     /// Envio de mensagem para o Whatsapp.
     /// </summary>
     /// <param name="request"></param>
