@@ -1,5 +1,6 @@
 ﻿using APPLICATION.DOMAIN.DTOS.REQUEST;
 using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using Microsoft.AspNetCore.Http;
 
 namespace APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 
@@ -10,12 +11,19 @@ public interface ITwillioService
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    Task<ApiResponse<object>> Sms(MessageRequest request);
-    
+    Task<ApiResponse<object>> SmsInvite(MessageRequest request);
+
+    /// <summary>
+    /// Método responsavel por receber um statusdo sms.
+    /// </summary>
+    /// <param name="formCollection"></param>
+    /// <returns></returns>
+    Task<ApiResponse<object>> SmsStatus(IFormCollection formCollection);
+
     /// <summary>
     /// Envio de mensagem para o Whatsapp.
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    Task<ApiResponse<object>> Whatsapp(MessageRequest request);
+    Task<ApiResponse<object>> WhatsappInvite(MessageRequest request);
 }

@@ -3,10 +3,8 @@ using APPLICATION.DOMAIN.DTOS.REQUEST;
 using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.DOMAIN.UTILS;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Serilog;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -38,7 +36,7 @@ namespace TOOLS.MAIL.API.CONTROLLER.TWILLIO
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(messageRequest)))
             using (LogContext.PushProperty("Metodo", "AddClaim"))
             {
-                return await Tracker.Time(() => _twillioService.Sms(messageRequest), "Enviar sms");
+                return await Tracker.Time(() => _twillioService.SmsInvite(messageRequest), "Enviar sms");
             }
         }
 
@@ -51,24 +49,13 @@ namespace TOOLS.MAIL.API.CONTROLLER.TWILLIO
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        public async Task SmsStatus()
+        public async Task<ApiResponse<object>> SmsStatus()
         {
             using (LogContext.PushProperty("Controller", "SmsController"))
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(null)))
             using (LogContext.PushProperty("Metodo", "StatusSms"))
             {
-
-                var response = new StatusSmsRequest
-                {
-                    SmsSid = Request.Form["MessageSid"],
-                    MessageStatus = Request.Form["MessageStatus"],
-                    AccountSid = Request.Form["AccountSid"],
-                    SmsStatus = Request.Form["SmsStatus"]
-                };
-
-                Log.Information($"Status sms {JsonConvert.SerializeObject(response)}");
-
-                //return await Tracker.Time(() => smsService.Sms(request), "Status sms");
+                return await Tracker.Time(() => _twillioService.SmsStatus(Request.Form), "Status sms recebido");
             }
         }
 
@@ -87,7 +74,7 @@ namespace TOOLS.MAIL.API.CONTROLLER.TWILLIO
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(messageRequest)))
             using (LogContext.PushProperty("Metodo", "Whatsapp"))
             {
-                return await Tracker.Time(() => _twillioService.Whatsapp(messageRequest), "Enviar mensagem para whatsapp");
+                return await Tracker.Time(() => _twillioService.WhatsappInvite(messageRequest), "Enviar mensagem para whatsapp");
             }
         }
     }
