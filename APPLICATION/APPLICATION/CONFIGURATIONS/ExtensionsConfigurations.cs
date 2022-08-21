@@ -359,56 +359,6 @@ public static class ExtensionsConfigurations
 
         }).Accepts<IFormFile>("text/plain").Produces(200);
         #endregion
-
-        #region Twillio
-        application.MapPost("twillio/sms/invite",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar sms.", Description = "Método responsavel por enviar sms.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] ITwillioService smsService, MessageRequest request) =>
-        {
-            using (LogContext.PushProperty("Controller", "SmsController"))
-            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-            using (LogContext.PushProperty("Metodo", "Sms"))
-            {
-                return await Tracker.Time(() => smsService.Sms(request), "Enviar sms");
-            }
-        });
-
-        application.MapPost("twillio/sms/status",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Status do sms.", Description = "Método responsavel por receber o status do sms.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] ITwillioService smsService, StatusSmsRequest request) =>
-        {
-            using (LogContext.PushProperty("Controller", "SmsController"))
-            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-            using (LogContext.PushProperty("Metodo", "StatusSms"))
-            {
-                Log.Information($"Status sms {JsonConvert.SerializeObject(request)}");
-
-                //return await Tracker.Time(() => smsService.Sms(request), "Status sms");
-            }
-        });
-
-        application.MapPost("twillio/whatsapp/invite",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar mensagens para o whatsapp.", Description = "Método responsavel por enviar mensagem para o whatsapp.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] ITwillioService smsService, MessageRequest request) =>
-        {
-           using (LogContext.PushProperty("Controller", "WhatsappController"))
-           using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-           using (LogContext.PushProperty("Metodo", "Whatsapp"))
-           {
-               return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar mensagem para whatsapp");
-           }
-        });
-        #endregion
-
         return application;
     }
 
