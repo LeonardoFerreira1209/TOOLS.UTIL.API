@@ -36,8 +36,7 @@ using Serilog.Events;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Globalization;
 using System.Net.Mime;
-using Twilio;
-using Twilio.Rest.Api.V2010.Account;
+using Twilio.TwiML;
 
 namespace APPLICATION.APPLICATION.CONFIGURATIONS;
 
@@ -379,20 +378,44 @@ public static class ExtensionsConfigurations
         });
 
         application.MapPost("twillio/whatsapp/invite",
-       [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar whatsapp.", Description = "Método responsavel por enviar mensagem por whatsapp.")]
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar mensagens para o whatsapp.", Description = "Método responsavel por enviar mensagem para o whatsapp.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
         async ([Service] ITwillioService smsService, MessageRequest request) =>
-       {
+        {
            using (LogContext.PushProperty("Controller", "WhatsappController"))
            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
            using (LogContext.PushProperty("Metodo", "Whatsapp"))
            {
-               return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar whatsapp.");
+               return await Tracker.Time(() => smsService.Whatsapp(request), "Enviar mensagem para whatsapp.");
            }
 
-       });
+        });
+
+        application.MapPost("twillio/whatsapp/receiver",
+        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Receber mensagem do whatsapp.", Description = "Método responsavel por receber mensagem do whatsapp.")]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+        async ([Service] ITwillioService smsService, MessageRequest request) =>
+        {
+           using (LogContext.PushProperty("Controller", "WhatsappController"))
+           using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
+           using (LogContext.PushProperty("Metodo", "WhatsappReceiver"))
+           {
+                Log.Information("Mensagem recebida");
+
+                var response = new MessagingResponse();
+                response.Message("Hello World");
+                //return TwiML(response);
+
+                //Log.Information(JsonConvert.DeserializeObject(response.));
+
+                //return await Tracker.Time(() => smsService.Whatsapp(request), "Recebere mensagem do whatsapp.");
+            }
+
+        });
         #endregion
 
         return application;

@@ -62,7 +62,7 @@ public class TwillioService : ITwillioService
         {
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
-            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:+1(415)523-8886"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
+            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:{_appsettings.Value.Twillio.TwillioWhatsappNumber}"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
 
             Log.Information($"[LOG INFORMATION] - Whatsapp enviado com sucesso.\n");
 

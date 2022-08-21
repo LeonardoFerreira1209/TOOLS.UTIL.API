@@ -52,6 +52,7 @@ public class Email
 
 public class Twillio
 {
+    public string TwillioWhatsappNumber { get; set; }
     public string TwillioPhoneNumber { get; set; }
     public string TwillioAccountSID { get; set; }
     public string TwillioAuthToken { get; set; }
