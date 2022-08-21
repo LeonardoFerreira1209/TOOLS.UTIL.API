@@ -117,9 +117,10 @@ jobs:
           ApplicationInsights.ConnectionStringApplicationInsightsKey: ${{ secrets.__CONNECTION_STRING_APPLICATION_INSIGHTS_KEY__ }}
           Email.From: ${{ secrets.__EMAIL__ }}
           Email.Password: ${{ secrets.__PASSWORD__ }}
-          Sms.TwillioPhoneNumber: ${{ secrets.__TWILLIO_PHONE_NUMBER__ }}
-          Sms.TwillioAccountSID: ${{ secrets.__TWILLIO_ACCOUNT_SID__ }}
-          Sms.TwillioAuthToken: ${{ secrets.__TWILLIO_AUTH_TOKEN__ }}
+          Twillio.TwillioWhatsappNumber: ${{ secrets.__TWILLIO_WHATSAPP_NUMBER__ }}
+          Twillio.TwillioPhoneNumber: ${{ secrets.__TWILLIO_PHONE_NUMBER__ }}
+          Twillio.TwillioAccountSID: ${{ secrets.__TWILLIO_ACCOUNT_SID__ }}
+          Twillio.TwillioAuthToken: ${{ secrets.__TWILLIO_AUTH_TOKEN__ }}
           
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
