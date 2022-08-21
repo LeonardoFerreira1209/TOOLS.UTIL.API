@@ -35,7 +35,7 @@ public class TwillioService : ITwillioService
         {
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
-            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber(_appsettings.Value.Twillio.TwillioPhoneNumber), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/twillio/sms/status"), to: new Twilio.Types.PhoneNumber(request.PhoneNumber));
+            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber(_appsettings.Value.Twillio.TwillioPhoneNumber), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/sms/status"), to: new Twilio.Types.PhoneNumber(request.PhoneNumber));
 
             Log.Information($"[LOG INFORMATION] - Sms enviado com sucesso.\n");
 
