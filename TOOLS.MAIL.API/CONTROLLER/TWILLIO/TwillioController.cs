@@ -5,6 +5,7 @@ using APPLICATION.DOMAIN.UTILS;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -55,6 +56,8 @@ namespace TOOLS.MAIL.API.CONTROLLER.TWILLIO
             using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(null)))
             using (LogContext.PushProperty("Metodo", "StatusSms"))
             {
+                Log.Information(JsonConvert.SerializeObject(Request.Form));
+
                 return await Tracker.Time(() => _twillioService.SmsStatus(Request.Form), "Status sms recebido");
             }
         }
