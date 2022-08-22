@@ -15,13 +15,9 @@ public class TemplateRepository : ITemplateRepository
 {
     private readonly DbContextOptions<Contexto> _dbContextOptions;
 
-    private readonly IOptions<AppSettings> _appsettings;
-
-    public TemplateRepository(IOptions<AppSettings> appsettings)
+    public TemplateRepository()
     {
         _dbContextOptions = new DbContextOptions<Contexto>();
-
-        _appsettings = appsettings;
     }
 
     /// <summary>
@@ -35,9 +31,9 @@ public class TemplateRepository : ITemplateRepository
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(Save)}\n");
 
-        using var conteto = new Contexto(_dbContextOptions, _appsettings);
+        using var conteto = new Contexto(_dbContextOptions);
 
-        await conteto.Templates.AddAsync(new TemplateEntity
+        await conteto.Templates.AddAsync(new Template
         {
             Name = name,
             Description = description,
@@ -57,7 +53,7 @@ public class TemplateRepository : ITemplateRepository
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(GetContentTemplateWithName)}\n");
 
-        using var conteto = new Contexto(_dbContextOptions, _appsettings);
+        using var conteto = new Contexto(_dbContextOptions);
 
         var template = await conteto.Templates.FirstOrDefaultAsync(t => t.Name == name);
 

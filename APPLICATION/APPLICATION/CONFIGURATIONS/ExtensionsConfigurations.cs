@@ -14,6 +14,7 @@ using APPLICATION.DOMAIN.UTILS;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
 using APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
+using APPLICATION.INFRAESTRUTURE.REPOSITORY.TWILLIO;
 using HotChocolate;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
@@ -36,7 +37,6 @@ using Serilog.Events;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Globalization;
 using System.Net.Mime;
-using Twilio.TwiML;
 
 namespace APPLICATION.APPLICATION.CONFIGURATIONS;
 
@@ -150,7 +150,7 @@ public static class ExtensionsConfigurations
     public static IServiceCollection ConfigureContexto(this IServiceCollection services, IConfiguration configurations)
     {
         services
-            .AddDbContext<Contexto>(options => options.UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
+            .AddDbContext<Contexto>(options => options.UseLazyLoadingProxies().UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
 
         return services;
     }
@@ -217,7 +217,8 @@ public static class ExtensionsConfigurations
             // Facades
             .AddSingleton<EmailFacade, EmailFacade>()
             // Repositories
-            .AddSingleton<ITemplateRepository, TemplateRepository>();
+            .AddSingleton<ITemplateRepository, TemplateRepository>()
+            .AddTransient<ITwillioRepository, TwillioRepository>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

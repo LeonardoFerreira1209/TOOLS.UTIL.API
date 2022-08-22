@@ -1,11 +1,10 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
-using APPLICATION.DOMAIN.DTOS.REQUEST;
 using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using APPLICATION.DOMAIN.DTOS.TWILLIO;
 using APPLICATION.DOMAIN.UTILS;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Serilog;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
 

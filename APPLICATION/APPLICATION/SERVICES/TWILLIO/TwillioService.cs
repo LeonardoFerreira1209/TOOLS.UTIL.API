@@ -1,7 +1,8 @@
-﻿using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
+﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
+using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
-using APPLICATION.DOMAIN.DTOS.REQUEST;
 using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using APPLICATION.DOMAIN.DTOS.TWILLIO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -18,9 +19,13 @@ public class TwillioService : ITwillioService
 {
     private readonly IOptions<AppSettings> _appsettings;
 
-    public TwillioService(IOptions<AppSettings> appsettings)
+    private readonly ITwillioRepository _twillioRepository;
+
+    public TwillioService(IOptions<AppSettings> appsettings, ITwillioRepository twillioRepository)
     {
         _appsettings = appsettings;
+
+        _twillioRepository = twillioRepository;
     }
 
     /// <summary>
@@ -34,19 +39,37 @@ public class TwillioService : ITwillioService
 
         try
         {
+            // Iniciando acessp a Twillio.
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
+            // Enviando mensagem.
             var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber(_appsettings.Value.Twillio.TwillioPhoneNumber), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/sms/status"), to: new Twilio.Types.PhoneNumber(request.PhoneNumber));
+
+            // Salvando mensagem no banco.
+            await _twillioRepository.Save(new StatusSmsRequest
+            {
+                AccountSid = message.AccountSid,
+                ApiVersion = message.ApiVersion,
+                Body = message.Body,
+                From = message.From.ToString(),
+                MessageId = message.Sid,
+                SmsSid = message.Sid,
+                MessageStatus = message.Status.ToString(),
+                SmsStatus = message.Status.ToString(),
+                To = message.To.ToString(),
+            });
 
             Log.Information($"[LOG INFORMATION] - Sms enviado com sucesso.\n");
 
+            // retorno success.
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Sms enviado com sucesso.") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
-            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError ,new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+            // retorno error.
+            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 
@@ -60,6 +83,7 @@ public class TwillioService : ITwillioService
 
         try
         {
+            // Montando request.
             var statusSms = new StatusSmsRequest
             {
                 SmsSid = formCollection["SmsSid"],
@@ -75,12 +99,19 @@ public class TwillioService : ITwillioService
 
             Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
 
+            // Salvando request no banco.
+            await _twillioRepository.Save(statusSms);
+
+            Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
+
+            // Retorno success.
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
+            // Retorno error.
             return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
@@ -95,6 +126,7 @@ public class TwillioService : ITwillioService
 
         try
         {
+            // Montando request.
             var statusSms = new StatusSmsRequest
             {
                 SmsSid = formCollection["SmsSid"],
@@ -110,12 +142,19 @@ public class TwillioService : ITwillioService
 
             Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
 
+            // Salvando request no banco.
+            await _twillioRepository.Save(statusSms);
+
+            Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
+
+            // Retorno success.
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
+            // Retorno error.
             return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
@@ -131,18 +170,36 @@ public class TwillioService : ITwillioService
 
         try
         {
+            // Iniciando acessp a Twillio.
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
+            // Enviando mensagem.
             var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:{_appsettings.Value.Twillio.TwillioWhatsappNumber}"), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/whatsapp/status"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
+
+            // Salvando mensagem no banco.
+            await _twillioRepository.Save(new StatusSmsRequest
+            {
+                AccountSid = message.AccountSid,
+                ApiVersion = message.ApiVersion,
+                Body = message.Body,
+                From = message.From.ToString(),
+                MessageId = message.Sid,
+                SmsSid = message.Sid,
+                MessageStatus = message.Status.ToString(),
+                SmsStatus = message.Status.ToString(),
+                To = message.To.ToString(),
+            });
 
             Log.Information($"[LOG INFORMATION] - Whatsapp enviado com sucesso.\n");
 
+            // Retorno sucesso.
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Whatsapp enviado com sucesso.") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
+            // Retorno error.
             return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }

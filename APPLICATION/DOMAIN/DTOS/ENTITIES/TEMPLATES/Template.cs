@@ -3,7 +3,7 @@
 /// <summary>
 /// Entidade de templates
 /// </summary>
-public class TemplateEntity
+public class Template
 {
     /// <summary>
     /// Identificador
