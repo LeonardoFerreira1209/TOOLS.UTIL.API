@@ -104,4 +104,24 @@ public class StatusSmsRequest
     /// Nome do Perfil.
     /// </summary>
     public string ProfileName { get; set; }
+
+    /// <summary>
+    /// Canal do endereço.
+    /// </summary>
+    public string ChannelToAddress { get; set; }
+
+    /// <summary>
+    /// Prefixo do canal.
+    /// </summary>
+    public string ChannelPrefix { get; set; }
+
+    /// <summary>
+    /// Canal de instalação.
+    /// </summary>
+    public string ChannelInstallSid { get; set; }
+
+    /// <summary>
+    /// Media URL.
+    /// </summary>
+    public string MediaUrl { get; set; }
 }

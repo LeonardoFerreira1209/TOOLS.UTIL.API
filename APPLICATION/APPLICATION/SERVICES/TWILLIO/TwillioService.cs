@@ -93,8 +93,6 @@ public class TwillioService : ITwillioService
 
         try
         {
-            Log.Information(JsonConvert.SerializeObject(formCollection));
-
             // Montando request.
             var statusSms = new StatusSmsRequest
             {
@@ -106,7 +104,7 @@ public class TwillioService : ITwillioService
                 To = formCollection["To"],
                 MessageId = formCollection["MessageId"],
                 ApiVersion = formCollection["ApiVersion"],
-                Body = formCollection["Body"]
+                Body = formCollection["Body"],
             };
 
             Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
@@ -118,51 +116,6 @@ public class TwillioService : ITwillioService
 
             // Retorno success.
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.") });
-        }
-        catch (Exception exception)
-        {
-            Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
-
-            // Retorno error.
-            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
-        }
-    }
-
-    /// <summary>
-    /// Método responsavel por receber um status de sms.
-    /// </summary>
-    /// <returns></returns>
-    public async Task<ApiResponse<object>> WhatsappStatus(IFormCollection formCollection)
-    {
-        Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TwillioService)} - METHOD {nameof(WhatsappStatus)}\n");
-
-        try
-        {
-            Log.Information(JsonConvert.SerializeObject(formCollection));
-
-            // Montando request.
-            var statusSms = new StatusSmsRequest
-            {
-                SmsSid = formCollection["SmsSid"],
-                MessageStatus = formCollection["MessageStatus"],
-                AccountSid = formCollection["AccountSid"],
-                SmsStatus = formCollection["SmsStatus"],
-                From = formCollection["From"],
-                To = formCollection["To"],
-                MessageId = formCollection["MessageId"],
-                ApiVersion = formCollection["ApiVersion"],
-                Body = formCollection["Body"]
-            };
-
-            Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
-
-            // Salvando request no banco.
-            await _twillioRepository.Save(statusSms);
-
-            Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
-
-            // Retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.") });
         }
         catch (Exception exception)
         {
@@ -218,6 +171,51 @@ public class TwillioService : ITwillioService
 
             // Retorno sucesso.
             return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Whatsapp enviado com sucesso.") });
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
+
+            // Retorno error.
+            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+        }
+    }
+
+    /// <summary>
+    /// Método responsavel por receber um status de sms.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<ApiResponse<object>> WhatsappStatus(IFormCollection formCollection)
+    {
+        Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TwillioService)} - METHOD {nameof(WhatsappStatus)}\n");
+
+        try
+        {
+            // Montando request.
+            var statusSms = new StatusSmsRequest
+            {
+                SmsSid = formCollection["SmsSid"],
+                MessageStatus = formCollection["MessageStatus"],
+                AccountSid = formCollection["AccountSid"],
+                SmsStatus = formCollection["SmsStatus"],
+                From = formCollection["From"],
+                To = formCollection["To"],
+                MessageId = formCollection["MessageId"],
+                ApiVersion = formCollection["ApiVersion"],
+                Body = formCollection["Body"],
+                ProfileName = formCollection["ProfileName"],
+                MediaUrl = formCollection["MediaUrl0"]
+            };
+
+            Log.Information($"Status sms: {JsonConvert.SerializeObject(statusSms)}");
+
+            // Salvando request no banco.
+            await _twillioRepository.Save(statusSms);
+
+            Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
+
+            // Retorno success.
+            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.") });
         }
         catch (Exception exception)
         {

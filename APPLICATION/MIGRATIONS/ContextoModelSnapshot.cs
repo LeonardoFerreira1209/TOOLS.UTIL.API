@@ -80,6 +80,9 @@ namespace APPLICATION.Migrations
                     b.Property<string>("From")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("MediaUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MessageId")
                         .HasColumnType("nvarchar(max)");
 

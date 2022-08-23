@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APPLICATION.Migrations
 {
-    public partial class FIRST_MAIL_API : Migration
+    public partial class FIRST_MAIL_MIGRATION : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -32,7 +32,9 @@ namespace APPLICATION.Migrations
                     NumSegments = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PriceUnit = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Sid = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Sid = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProfileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MediaUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -34,6 +34,7 @@ public class MessageTwillioTypesConfiguration : IEntityTypeConfiguration<Message
         builder.Property(message => message.Price);
         builder.Property(message => message.PriceUnit);
         builder.Property(message => message.ProfileName);
+        builder.Property(message => message.MediaUrl);
 
         // Int
         builder.Property(message => message.NumMedia);

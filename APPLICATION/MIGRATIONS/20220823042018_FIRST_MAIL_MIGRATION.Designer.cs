@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APPLICATION.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20220823030824_FIRST_MAIL_1")]
-    partial class FIRST_MAIL_1
+    [Migration("20220823042018_FIRST_MAIL_MIGRATION")]
+    partial class FIRST_MAIL_MIGRATION
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -80,6 +80,9 @@ namespace APPLICATION.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("From")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MediaUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MessageId")

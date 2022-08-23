@@ -109,4 +109,9 @@ public class MessageTwillio
     /// Nome do Perfil.
     /// </summary>
     public string ProfileName { get; set; }
+
+    /// <summary>
+    /// Media URL.
+    /// </summary>
+    public string MediaUrl { get; set; }
 }
