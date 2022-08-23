@@ -51,7 +51,8 @@ public class TwillioRepository : ITwillioRepository
            Price = statusSmsRequest.Price,
            PriceUnit = statusSmsRequest.PriceUnit,
            Sid = statusSmsRequest.Sid,
-           ProfileName = statusSmsRequest.ProfileName
+           ProfileName = statusSmsRequest.ProfileName,
+           MediaUrl = statusSmsRequest.MediaUrl
         });
 
         await _contexto.SaveChangesAsync();
