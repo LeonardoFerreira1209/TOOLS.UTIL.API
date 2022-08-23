@@ -138,6 +138,8 @@ public class TwillioService : ITwillioService
 
         try
         {
+            Log.Information(JsonConvert.SerializeObject(formCollection));
+
             // Montando request.
             var statusSms = new StatusSmsRequest
             {
