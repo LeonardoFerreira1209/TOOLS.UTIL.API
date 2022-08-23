@@ -40,7 +40,18 @@ public class TwillioRepository : ITwillioRepository
            MessageId = statusSmsRequest.MessageId,
            MessageStatus = statusSmsRequest.MessageStatus,
            SmsSid = statusSmsRequest.SmsSid,
-           SmsStatus = statusSmsRequest.SmsStatus
+           SmsStatus = statusSmsRequest.SmsStatus,
+           DateCreated = statusSmsRequest.DateCreated,
+           DateSent = statusSmsRequest.DateSent,
+           DateUpdated = statusSmsRequest.DateUpdated,
+           ErrorCode = statusSmsRequest.ErrorCode,
+           ErrorMessage = statusSmsRequest.ErrorMessage,
+           NumMedia = statusSmsRequest.NumMedia,
+           NumSegments = statusSmsRequest.NumSegments,
+           Price = statusSmsRequest.Price,
+           PriceUnit = statusSmsRequest.PriceUnit,
+           Sid = statusSmsRequest.Sid,
+           ProfileName = statusSmsRequest.ProfileName
         });
 
         await _contexto.SaveChangesAsync();

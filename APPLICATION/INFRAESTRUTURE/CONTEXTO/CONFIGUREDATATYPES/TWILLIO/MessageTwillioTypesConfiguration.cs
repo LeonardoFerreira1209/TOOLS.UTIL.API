@@ -14,6 +14,11 @@ public class MessageTwillioTypesConfiguration : IEntityTypeConfiguration<Message
         // Guid
         builder.Property(message => message.Id).IsRequired();
 
+        // DateTime
+        builder.Property(message => message.DateCreated);
+        builder.Property(message => message.DateSent);
+        builder.Property(message => message.DateUpdated);
+
         // String
         builder.Property(message => message.From);
         builder.Property(message => message.To);
@@ -23,6 +28,16 @@ public class MessageTwillioTypesConfiguration : IEntityTypeConfiguration<Message
         builder.Property(message => message.AccountSid);
         builder.Property(message => message.ApiVersion);
         builder.Property(message => message.MessageId);
+        builder.Property(message => message.ErrorMessage);
         builder.Property(message => message.SmsSid);
+        builder.Property(message => message.Sid);
+        builder.Property(message => message.Price);
+        builder.Property(message => message.PriceUnit);
+        builder.Property(message => message.ProfileName);
+
+        // Int
+        builder.Property(message => message.NumMedia);
+        builder.Property(message => message.NumSegments);
+        builder.Property(message => message.ErrorCode);
     }
 }

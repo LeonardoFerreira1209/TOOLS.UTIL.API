@@ -322,7 +322,7 @@ public static class ExtensionsConfigurations
     public static WebApplication UseMinimalAPI(this WebApplication application)
     {
         #region Mail's
-        application.MapPost("/mail/invite",
+        application.MapPost("api/mail/invite",
         [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar e-mail para usuário.", Description = "Método responsavel por enviar um e-mail.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
@@ -339,7 +339,7 @@ public static class ExtensionsConfigurations
         #endregion
 
         #region Templates
-        application.MapPost("/mail/templates/save",
+        application.MapPost("api/mail/templates/save",
         [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Salvar modelos de templates no banco de dados.", Description = "Método responsavel por salvar templates no banco de dados.")]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

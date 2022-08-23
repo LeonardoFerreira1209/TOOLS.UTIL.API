@@ -57,6 +57,16 @@ public class TwillioService : ITwillioService
                 MessageStatus = message.Status.ToString(),
                 SmsStatus = message.Status.ToString(),
                 To = message.To.ToString(),
+                DateCreated = message.DateCreated,
+                DateUpdated = message.DateUpdated,
+                DateSent = message.DateSent,
+                ErrorCode = message.ErrorCode,
+                ErrorMessage = message.ErrorMessage,
+                NumMedia = message.NumMedia,
+                NumSegments = message.NumSegments,
+                Price = message.Price,
+                PriceUnit = message.PriceUnit,
+                Sid = message.Sid
             });
 
             Log.Information($"[LOG INFORMATION] - Sms enviado com sucesso.\n");
@@ -83,6 +93,8 @@ public class TwillioService : ITwillioService
 
         try
         {
+            Log.Information(JsonConvert.SerializeObject(formCollection));
+
             // Montando request.
             var statusSms = new StatusSmsRequest
             {
@@ -188,6 +200,16 @@ public class TwillioService : ITwillioService
                 MessageStatus = message.Status.ToString(),
                 SmsStatus = message.Status.ToString(),
                 To = message.To.ToString(),
+                DateCreated = message.DateCreated,
+                PriceUnit = message.PriceUnit,
+                Price = message.Price,
+                DateSent = message.DateSent,
+                DateUpdated = message.DateUpdated,
+                ErrorCode = message.ErrorCode,
+                ErrorMessage = message.ErrorMessage,
+                NumMedia = message.NumMedia,
+                NumSegments = message.NumSegments,
+                Sid = message.Sid
             });
 
             Log.Information($"[LOG INFORMATION] - Whatsapp enviado com sucesso.\n");

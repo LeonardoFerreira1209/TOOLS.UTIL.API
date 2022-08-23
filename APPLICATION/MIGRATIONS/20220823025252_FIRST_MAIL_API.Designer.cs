@@ -4,6 +4,7 @@ using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APPLICATION.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20220823025252_FIRST_MAIL_API")]
+    partial class FIRST_MAIL_API
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,9 +98,6 @@ namespace APPLICATION.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PriceUnit")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfileName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sid")

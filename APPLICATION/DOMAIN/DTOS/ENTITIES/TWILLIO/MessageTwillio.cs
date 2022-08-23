@@ -55,4 +55,58 @@ public class MessageTwillio
     /// </summary>
     public string Body { get; set; }
 
+    /// <summary>
+    /// Data em que a mensagem foi criada.
+    /// </summary>
+    public DateTime? DateCreated { get; set; }
+
+    /// <summary>
+    /// Data em que a mensagem foi enviada.
+    /// </summary>
+    public DateTime? DateSent { get; set; }
+
+    /// <summary>
+    /// Data em que a mensagem foi atualizada.
+    /// </summary>
+    public DateTime? DateUpdated { get; set; }
+
+    /// <summary>
+    /// Código de erro.
+    /// </summary>
+    public int? ErrorCode { get; set; }
+
+    /// <summary>
+    /// Mensagem de erro,
+    /// </summary>
+    public string ErrorMessage { get; set; }
+
+    /// <summary>
+    /// Número de midias.
+    /// </summary>
+    public string NumMedia { get; set; }
+
+    /// <summary>
+    /// Número de segmentos.
+    /// </summary>
+    public string NumSegments { get; set; }
+
+    /// <summary>
+    /// Valor.
+    /// </summary>
+    public string Price { get; set; }
+
+    /// <summary>
+    /// Valor unitário.
+    /// </summary>
+    public string PriceUnit { get; set; }
+
+    /// <summary>
+    /// Id da mensagem.
+    /// </summary>
+    public string Sid { get; set; }
+
+    /// <summary>
+    /// Nome do Perfil.
+    /// </summary>
+    public string ProfileName { get; set; }
 }

@@ -12,19 +12,19 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APPLICATION.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20220822220449_ADD_MESSAGE_TWILLIO_MIGRATION")]
-    partial class ADD_MESSAGE_TWILLIO_MIGRATION
+    [Migration("20220823030824_FIRST_MAIL_1")]
+    partial class FIRST_MAIL_1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.6")
+                .HasAnnotation("ProductVersion", "6.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES.TemplateEntity", b =>
+            modelBuilder.Entity("APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES.Template", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -49,7 +49,7 @@ namespace APPLICATION.Migrations
                     b.ToTable("Templates", (string)null);
                 });
 
-            modelBuilder.Entity("APPLICATION.DOMAIN.DTOS.TWILLIO.MessageTwillioEntity", b =>
+            modelBuilder.Entity("APPLICATION.DOMAIN.DTOS.TWILLIO.MessageTwillio", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,6 +64,21 @@ namespace APPLICATION.Migrations
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateSent")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ErrorCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("From")
                         .HasColumnType("nvarchar(max)");
 
@@ -71,6 +86,24 @@ namespace APPLICATION.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MessageStatus")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumMedia")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NumSegments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Price")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PriceUnit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProfileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sid")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SmsSid")

@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace APPLICATION.Migrations
 {
-    public partial class ADD_MESSAGE_TWILLIO_MIGRATION : Migration
+    public partial class FIRST_MAIL_API : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,7 +22,17 @@ namespace APPLICATION.Migrations
                     AccountSid = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     From = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApiVersion = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateSent = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ErrorCode = table.Column<int>(type: "int", nullable: true),
+                    ErrorMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumMedia = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NumSegments = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Price = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PriceUnit = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Sid = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
