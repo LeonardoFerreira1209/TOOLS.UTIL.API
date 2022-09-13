@@ -1,9 +1,7 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
-using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
 using APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
@@ -13,11 +11,11 @@ namespace APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 /// </summary>
 public class TemplateRepository : ITemplateRepository
 {
-    private readonly DbContextOptions<Contexto> _dbContextOptions;
+    private readonly Contexto _contexto;
 
-    public TemplateRepository()
+    public TemplateRepository(Contexto contexto) 
     {
-        _dbContextOptions = new DbContextOptions<Contexto>();
+        _contexto = contexto;
     }
 
     /// <summary>
@@ -31,16 +29,14 @@ public class TemplateRepository : ITemplateRepository
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(Save)}\n");
 
-        using var conteto = new Contexto(_dbContextOptions);
-
-        await conteto.Templates.AddAsync(new Template
+        await _contexto.Templates.AddAsync(new Template
         {
             Name = name,
             Description = description,
             Content = fileContent
         });
 
-        await conteto.SaveChangesAsync();
+        await _contexto.SaveChangesAsync();
 
     }
 
@@ -53,9 +49,7 @@ public class TemplateRepository : ITemplateRepository
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(GetContentTemplateWithName)}\n");
 
-        using var conteto = new Contexto(_dbContextOptions);
-
-        var template = await conteto.Templates.FirstOrDefaultAsync(t => t.Name == name);
+        var template = await _contexto.Templates.FirstOrDefaultAsync(t => t.Name == name);
 
         return template.Content;
     }

@@ -45,7 +45,7 @@ try
         .UseDefaultFiles()
         .UseStaticFiles()
         .UseRouting()
-        .UseCors("CorsPolicu")
+        .UseCors("CorsPolicy")
         .ConfigureHealthChecks()
         .UseSwaggerConfigurations(configurations);
 
