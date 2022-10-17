@@ -11,6 +11,10 @@ try
     // Pegando configurações do appsettings.json.
     var configurations = builder.Configuration;
 
+    // Pega o appsettings baseado no ambiente em execução.
+    configurations
+         .SetBasePath(builder.Environment.ContentRootPath).AddJsonFile("appsettings.json", true, true).AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true).AddEnvironmentVariables();
+
     /// <summary>
     /// Chamada das configurações do projeto.
     /// </summary>
@@ -22,10 +26,19 @@ try
         .ConfigureLanguage()
         .ConfigureContexto(configurations)
         .ConfigureSwagger(configurations)
-        .ConfigureDependencies(configurations)
-        .ConfigureTelemetry(configurations)
-        .ConfigureApplicationInsights(configurations)
-        .ConfigureSerilog()
+        .ConfigureDependencies(configurations, builder.Environment);
+
+    // Se for em produção executa.
+    if (builder.Environment.IsProduction())
+    {
+        builder.Services
+             .ConfigureTelemetry(configurations)
+             .ConfigureApplicationInsights(configurations);
+    }
+
+    // Continuação do pipeline...
+    builder.Services
+        //.ConfigureSerilog()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
         .AddControllers(options =>
