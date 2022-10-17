@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace TOOLS.MAIL.API.CONTROLLER.TWILLIO
+namespace TOOLS.UTIL.API.CONTROLLER.TWILLIO
 {
     [Route("api/[controller]")][ApiController]
     public class TwillioController : ControllerBase

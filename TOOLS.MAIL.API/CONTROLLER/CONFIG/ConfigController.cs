@@ -1,7 +1,7 @@
 ﻿using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TOOLS.MAIL.API.CONTROLLER.CONFIG
+namespace TOOLS.UTIL.API.CONTROLLER.CONFIG
 {
     [Route("api/[controller]")]
     [ApiController]

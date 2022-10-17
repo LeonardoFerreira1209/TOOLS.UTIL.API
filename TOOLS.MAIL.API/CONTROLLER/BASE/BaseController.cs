@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TOOLS.USER.API.CONTROLLER.BASE
+namespace TOOLS.UTIL.API.CONTROLLER.BASE
 {
     public class BaseController : ControllerBase { }
 }

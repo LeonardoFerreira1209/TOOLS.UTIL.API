@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "TOOLS.MAIL.API (DEBUG)": {
+    "TOOLS.UTIL.API (DEBUG)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
@@ -18,7 +18,7 @@
         "ASPNETCORE_ENVIRONMENT": ""
       }
     },
-    "TOOLS.MAIL.API (RELEASE)": {
+    "TOOLS.UTIL.API (RELEASE)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
