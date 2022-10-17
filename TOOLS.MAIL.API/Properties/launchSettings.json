@@ -1,6 +1,6 @@
 ﻿{
   "profiles": {
-    "TOOLS.UTIL.API (DEBUG)": {
+    "TOOLS.UTIL.API (RELEASE)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
@@ -9,7 +9,7 @@
       },
       "applicationUrl": "https://localhost:7040;http://localhost:5041"
     },
-    "TOOLS.UTIL.API (RELEASE)": {
+    "TOOLS.UTIL.API (DEBUG)": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
