@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace APPLICATION.Migrations
 {
-    public partial class TOOLS_MAIL_TABLES : Migration
+    /// <inheritdoc />
+    public partial class INITIALUTILAPI : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -56,6 +58,7 @@ namespace APPLICATION.Migrations
                 });
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

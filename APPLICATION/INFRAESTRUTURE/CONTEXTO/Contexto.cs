@@ -34,15 +34,11 @@ public class Contexto : DbContext
     /// <summary>
     /// Sets de tabelas no banco.
     /// </summary>
-    #region  DbSet's
-
     #region M
     public DbSet<MessageTwillio> MessagesTwillio { get; set; }
     #endregion
 
     #region T
     public DbSet<Template> Templates { get; set; }
-    #endregion
-
     #endregion
 }

@@ -25,6 +25,7 @@ try
         .AddOptions()
         .ConfigureLanguage()
         .ConfigureContexto(configurations)
+        .ConfigureApllicationCookie()
         .ConfigureSwagger(configurations)
         .ConfigureDependencies(configurations, builder.Environment);
 
@@ -38,7 +39,7 @@ try
 
     // Continuação do pipeline...
     builder.Services
-        //.ConfigureSerilog()
+        .ConfigureSerilog()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
         .AddControllers(options =>
@@ -57,8 +58,10 @@ try
         .UseHttpsRedirection()
         .UseDefaultFiles()
         .UseStaticFiles()
+        .UseCookiePolicy()
         .UseRouting()
         .UseCors("CorsPolicy")
+        .UseResponseCaching()
         .ConfigureHealthChecks()
         .UseSwaggerConfigurations(configurations);
 

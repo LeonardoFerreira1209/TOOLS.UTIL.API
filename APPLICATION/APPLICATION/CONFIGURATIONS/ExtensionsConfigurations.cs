@@ -123,6 +123,23 @@ public static class ExtensionsConfigurations
     }
 
     /// <summary>
+    /// Configura os cookies da applicação.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureApllicationCookie(this IServiceCollection services)
+    {
+        return services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.HttpOnly = true;
+
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+            options.SlidingExpiration = true;
+        });
+    }
+
+    /// <summary>
     /// Configuração de App Insights
     /// </summary>
     /// <param name="services"></param>
@@ -221,10 +238,10 @@ public static class ExtensionsConfigurations
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITemplateService, TemplateService>()
             // Facades
-            .AddSingleton<EmailFacade, EmailFacade>()
+            .AddSingleton<EmailFacade>()
             // Repositories
-            .AddSingleton<ITemplateRepository, TemplateRepository>()
-            .AddTransient<ITwillioRepository, TwillioRepository>();
+            .AddScoped<ITemplateRepository, TemplateRepository>()
+            .AddScoped<ITwillioRepository, TwillioRepository>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -319,55 +336,4 @@ public static class ExtensionsConfigurations
 
         return application;
     }
-
-    /// <summary>
-    /// Configruação de minimals APIS.
-    /// </summary>
-    /// <param name="applicationBuilder"></param>
-    /// <returns></returns>
-    public static WebApplication UseMinimalAPI(this WebApplication application)
-    {
-        #region Mail's
-        application.MapPost("api/mail/invite",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Enviar e-mail para usuário.", Description = "Método responsavel por enviar um e-mail.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] IEmailService emailService, MailRequest request) =>
-        {
-            using (LogContext.PushProperty("Controller", "MailController"))
-            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-            using (LogContext.PushProperty("Metodo", "Invite"))
-            {
-                return await Tracker.Time(() => emailService.Invite(request), "Enviar e-mail");
-            }
-        });
-        #endregion
-
-        #region Templates
-        application.MapPost("api/mail/templates/save",
-        [EnableCors("CorsPolicy")][AllowAnonymous][SwaggerOperation(Summary = "Salvar modelos de templates no banco de dados.", Description = "Método responsavel por salvar templates no banco de dados.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        async ([Service] ITemplateService templateService, string name, string description, HttpRequest request) =>
-        {
-            using (var reader = new StreamReader(request.Body, System.Text.Encoding.UTF8))
-            {
-                string fileContent = await reader.ReadToEndAsync();
-
-                using (LogContext.PushProperty("Controller", "MailController"))
-                using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(new List<string> { name, description, fileContent })))
-                using (LogContext.PushProperty("Metodo", "Save Templates"))
-                {
-                    return await Tracker.Time(() => templateService.Save(name, description, fileContent), "Salvar template");
-                }
-            }
-
-        }).Accepts<IFormFile>("text/plain").Produces(200);
-        #endregion
-
-        return application;
-    }
-
 }
