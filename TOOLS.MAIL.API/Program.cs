@@ -65,9 +65,6 @@ try
         .ConfigureHealthChecks()
         .UseSwaggerConfigurations(configurations);
 
-    // Chamando as configurações de Minimal APIS.
-    applicationbuilder.UseMinimalAPI();
-
     Log.Information($"[LOG INFORMATION] - Inicializando aplicação [TOOLS.MAIL.API]\n");
 
     // Iniciando a aplicação com todas as configurações já carregadas.
