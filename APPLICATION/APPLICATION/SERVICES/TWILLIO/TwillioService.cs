@@ -43,7 +43,7 @@ public class TwillioService : ITwillioService
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
             // Enviando mensagem.
-            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber(_appsettings.Value.Twillio.TwillioPhoneNumber), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/sms/status"), to: new Twilio.Types.PhoneNumber(request.PhoneNumber));
+            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber(_appsettings.Value.Twillio.TwillioPhoneNumber), statusCallback: new Uri("https://toolsutilapi.azurewebsites.net/api/Twillio/sms/status"), to: new Twilio.Types.PhoneNumber(request.PhoneNumber));
 
             // Salvando mensagem no banco.
             await _twillioRepository.Save(new StatusSmsRequest
@@ -72,7 +72,7 @@ public class TwillioService : ITwillioService
             Log.Information($"[LOG INFORMATION] - Sms enviado com sucesso.\n");
 
             // retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Sms enviado com sucesso.") });
+            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Sms enviado com sucesso.\n") });
         }
         catch (Exception exception)
         {
@@ -115,7 +115,7 @@ public class TwillioService : ITwillioService
             Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
 
             // Retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.") });
+            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.\n") });
         }
         catch (Exception exception)
         {
@@ -141,7 +141,7 @@ public class TwillioService : ITwillioService
             TwilioClient.Init(_appsettings.Value.Twillio.TwillioAccountSID, _appsettings.Value.Twillio.TwillioAuthToken);
 
             // Enviando mensagem.
-            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:{_appsettings.Value.Twillio.TwillioWhatsappNumber}"), statusCallback: new Uri("https://toolsmailapi.azurewebsites.net/api/Twillio/whatsapp/status"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
+            var message = MessageResource.Create(body: request.Content, from: new Twilio.Types.PhoneNumber($"whatsapp:{_appsettings.Value.Twillio.TwillioWhatsappNumber}"), statusCallback: new Uri("https://toolsutilapi.azurewebsites.net/api/Twillio/whatsapp/status"), to: new Twilio.Types.PhoneNumber($"whatsapp:{request.PhoneNumber}"));
 
             // Salvando mensagem no banco.
             await _twillioRepository.Save(new StatusSmsRequest
@@ -170,7 +170,7 @@ public class TwillioService : ITwillioService
             Log.Information($"[LOG INFORMATION] - Whatsapp enviado com sucesso.\n");
 
             // Retorno sucesso.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Whatsapp enviado com sucesso.") });
+            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Whatsapp enviado com sucesso.\n") });
         }
         catch (Exception exception)
         {
@@ -215,7 +215,7 @@ public class TwillioService : ITwillioService
             Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
 
             // Retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.") });
+            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.\n") });
         }
         catch (Exception exception)
         {
