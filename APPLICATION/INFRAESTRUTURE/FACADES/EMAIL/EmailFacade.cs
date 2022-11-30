@@ -4,6 +4,8 @@ using APPLICATION.DOMAIN.DTOS.EMAIL;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
 
@@ -45,6 +47,8 @@ public class EmailFacade
         }
         catch (Exception exception)
         {
+            Log.Error("[LOG ERROR]\n", exception, exception.Message);
+
             throw new Exception(exception.Message);
         }
     }
@@ -57,25 +61,38 @@ public class EmailFacade
     /// <exception cref="Exception"></exception>
     private async Task<MimeMessage> CreateEmailBody(Message message)
     {
+        Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(EmailFacade)} - METHOD {nameof(CreateEmailBody)}\n");
+
         try
         {
+            // Instance of MimeMessage.
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("receiver", _appsettings.Value.Email.From));
+            Log.Information($"[LOG INFORMATION] - Preparando e-mail de TOOLS.API para {_appsettings.Value.Email.From}.\n");
 
+            // Prepare Mailbox address.
+            emailMessage.From.Add(new MailboxAddress("TOOLS.API", _appsettings.Value.Email.From));
+
+            // Set receivers in message.
             emailMessage.To.AddRange(message.Receiver);
 
+            // Set subject in e-mail.
             emailMessage.Subject = message.Subject;
 
+            // Set e-mail body in text.
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
                 Text = await GetTemplate(message.TemplateName, message.Subject, message.Content, message.Link, message.ButtonText)
             };
 
+            Log.Information($"[LOG INFORMATION] - E-mail preparado com sucesso.\n");
+
             return await Task.FromResult(emailMessage);
         }
         catch (Exception exception)
         {
+            Log.Error($"[LOG ERROR] - {exception.Message}\n");
+
             throw new Exception(exception.Message);
         }
     }
@@ -87,24 +104,36 @@ public class EmailFacade
     /// <exception cref="Exception"></exception>
     private async Task Send(MimeMessage emailMessage)
     {
+        Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(EmailFacade)} - METHOD {nameof(Send)}\n");
+
         using var client = new SmtpClient();
 
         try
         {
+            Log.Information($"[LOG INFORMATION] - Conectando ao cliente com o SmtpServer {_appsettings.Value.Email.SmtpServer} & Porta {_appsettings.Value.Email.Port}\n");
+
             await client.ConnectAsync(_appsettings.Value.Email.SmtpServer, _appsettings.Value.Email.Port, false);
 
             client.AuthenticationMechanisms.Remove("XOAUTH2");
 
+            Log.Information($"[LOG INFORMATION] - Autenticando o cliente {_appsettings.Value.Email.From}\n");
+
             await client.AuthenticateAsync(_appsettings.Value.Email.From, _appsettings.Value.Email.Password);
+
+            Log.Information($"[LOG INFORMATION] - Enviando e-mail {emailMessage.ToString()}.\n");
 
             await client.SendAsync(emailMessage);
         }
         catch (Exception exception)
         {
+            Log.Error($"[LOG ERROR] - {exception.Message}\n");
+
             throw new Exception(exception.Message);
         }
         finally
         {
+            Log.Information($"[LOG INFORMATION] - Desconectando cliente.\n");
+
             client.Disconnect(true);
 
             client.Dispose();

@@ -40,7 +40,7 @@ public class EmailService : IEmailService
 
             Log.Information($"[LOG INFORMATION] - E-mail enviado com sucesso.\n");
 
-            return new ApiResponse<object>(true, StatusCodes.SuccessOK ,new List<DadosNotificacao> { new DadosNotificacao("Email enviado com sucesso.") });
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK ,new List<DadosNotificacao> { new DadosNotificacao("Email enviado com sucesso.\n") });
         }
         catch (Exception exception)
         {
