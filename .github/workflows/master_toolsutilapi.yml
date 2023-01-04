@@ -94,6 +94,7 @@ jobs:
           files: '${{env.DOTNET_ROOT}}/myapp/appsettings.json'
         env:
           ConnectionStrings.BaseDados: ${{ secrets.__CONNECTION_STRING_DATABASE__ }}
+          ConnectionStrings.ServiceBus: ${{ secrets.__CONNECTION_STRING_SERVICEBUS__ }}
           ApplicationInsights.InstrumentationKey: ${{ secrets.__APPINSIGHTS_INSTRUMENTATION_KEY__ }}
           ApplicationInsights.ConnectionStringApplicationInsightsKey: ${{ secrets.__CONNECTION_STRING_APPLICATION_INSIGHTS_KEY__ }}
           ApplicationInsights.CloudRoleName: ${{ secrets.__CLOUD_ROLE_NAME__ }}
@@ -103,6 +104,7 @@ jobs:
           Twillio.TwillioPhoneNumber: ${{ secrets.__TWILLIO_PHONE_NUMBER__ }}
           Twillio.TwillioAccountSID: ${{ secrets.__TWILLIO_ACCOUNT_SID__ }}
           Twillio.TwillioAuthToken: ${{ secrets.__TWILLIO_AUTH_TOKEN__ }}
+          ServiceBus.QueueUserEmail: ${{ secrets.__QUEUE_USER_EMAIL__ }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
