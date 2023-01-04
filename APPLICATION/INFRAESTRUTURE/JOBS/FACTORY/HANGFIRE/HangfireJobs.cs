@@ -25,7 +25,7 @@ public class HangfireJobs : IHangfireJobs
         {
             Log.Information($"[LOG INFORMATION] - Inicializando os Job do Hangfire.\n");
 
-            _recurringJobManager.AddOrUpdate<IReceiveUserEmailToServiceBusJob>("process-receive-user-email-servicebus", job => job.Execute(), Cron.Minutely(), TimeZoneInfo.Local);
+            _recurringJobManager.AddOrUpdate<IReceiveUserEmailToServiceBusJob>("process-receive-user-email-servicebus", job => job.Execute(), "0/5 * * * *", TimeZoneInfo.Local);
         }
         catch (Exception exception)
         {

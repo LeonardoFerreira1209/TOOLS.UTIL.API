@@ -47,7 +47,7 @@ public class ReceiveUserEmailToServiceBusJob : IReceiveUserEmailToServiceBusJob
 
         try
         {
-            Log.Information($"[LOG INFORMATION] - Processando Job de Delete de usuários sem pessaos vinculadas.\n");
+            Log.Information($"[LOG INFORMATION] - Processando Job de Recebimento de mensagem do barramento do ServiceBus.\n");
 
             // get messages from service bus.
             var messageEntities = await _userEmailServiceBusReceiverProvider.GetMessagesAsync<UserEmailMessageDto>(10);
@@ -73,7 +73,7 @@ public class ReceiveUserEmailToServiceBusJob : IReceiveUserEmailToServiceBusJob
                 await _userEmailServiceBusReceiverProvider.CompleteMessageAsync(message.OriginalMessage);
             });
 
-            Log.Information("[LOG INFORMATION] - Finalizando Job de Delete de usuários sem pessaos vinculadas\n");
+            Log.Information("[LOG INFORMATION] - Finalizando Job de Recebimento de mensagem do barramento do ServiceBus.\n");
         }
         catch (Exception exception)
         {
