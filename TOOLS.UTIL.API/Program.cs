@@ -1,5 +1,6 @@
 using APPLICATION.APPLICATION.CONFIGURATIONS;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
+using APPLICATION.DOMAIN.UTILS.AUTH.CUSTOMAUTHORIZE.FILTER;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -68,7 +69,10 @@ try
         .UseResponseCaching()
         .UseHealthChecks()
         .UseSwaggerConfigurations(configurations)
-        .UseHangfireDashboard();
+        .UseHangfireDashboard("/hangfire", new DashboardOptions
+        {
+            Authorization = new[] { new CustomAuthorizeHangfireFilter() }
+        });
 
     Log.Information($"[LOG INFORMATION] - Inicializando aplicação [TOOLS.MAIL.API]\n");
 
