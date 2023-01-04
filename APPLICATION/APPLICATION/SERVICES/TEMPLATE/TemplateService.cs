@@ -1,9 +1,10 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
-using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
+using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
-using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
-using APPLICATION.DOMAIN.ENUM;
+using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.ENUMS;
 using Microsoft.Extensions.Options;
+using MimeKit;
 using Serilog;
 
 namespace APPLICATION.APPLICATION.SERVICES.TEMPLATE;
@@ -37,8 +38,12 @@ public class TemplateService : ITemplateService
 
         try
         {
+            Log.Information($"[LOG INFORMATION] - Salvando o template {name} - {description} - Content {fileContent}\n");
+
             // Save the template in database.
             await _templateRepository.Save(name, description, fileContent);
+
+            Log.Information($"[LOG INFORMATION] - Templeta salvo com sucesso!\n");
 
             // Response success.
             return new ApiResponse<object>(true, StatusCodes.SuccessOK, new List<DadosNotificacao> { new DadosNotificacao("Template cadastrado com sucesso.") });
@@ -63,11 +68,15 @@ public class TemplateService : ITemplateService
 
         try
         {
+            Log.Information($"[LOG INFORMATION] - Recuperando o template {name}\n");
+
             // Get template.
             var content = await _templateRepository.GetContentTemplateWithName(name);
 
             // Is not null -> Response success.
-            if (content is not null) return new ApiResponse<string>(true, StatusCodes.SuccessOK, content, new List<DadosNotificacao> { new DadosNotificacao("Template cadastrado com sucesso.") });
+            if (content is not null) return new ApiResponse<string>(true, StatusCodes.SuccessOK, content, new List<DadosNotificacao> { new DadosNotificacao("Template recuperado0 com sucesso.") });
+
+            Log.Information($"[LOG INFORMATION] - Template Recuperado com sucesso!\n");
 
             // Response error.
             return new ApiResponse<string>(false, StatusCodes.ErrorBadRequest, new List<DadosNotificacao> { new DadosNotificacao("Nenhum template encontrado.") });

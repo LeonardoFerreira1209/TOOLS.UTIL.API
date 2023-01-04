@@ -1,4 +1,6 @@
-﻿namespace APPLICATION.DOMAIN.DTOS.CONFIGURATION;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace APPLICATION.DOMAIN.DTOS.CONFIGURATION;
 
 /// <summary>
 /// Classe responsavel por receber os dados do Appsettings.
@@ -9,10 +11,14 @@ public class AppSettings
     public SwaggerInfo SwaggerInfo { get; set; }
     public Configuracoes Configuracoes { get; set; }
     public RetryPolicy RetryPolicy { get; set; }
+    public ServiceBus ServiceBus { get; set; }
     public Email Email { get; set; }
     public Twillio Twillio { get; set; }
 }
 
+/// <summary>
+/// Classe responsável por receber dados de retry policy.
+/// </summary>
 public class RetryPolicy
 {
     public string RetryOn { get; set; }
@@ -20,11 +26,30 @@ public class RetryPolicy
     public int RetryEachSecond { get; set; }
 }
 
+/// <summary>
+/// Classe de dados do serviceBus
+/// </summary>
+public class ServiceBus
+{
+    public int NumeroThreadsConsumer { get; set; }
+    public string QueueUserEmail { get; set; }
+    public string SubscriptionExemploName { get; set; }
+    public int TempoReagendamentoMinutos { get; set; }
+    public int QuantidadeMaximaDeRetentativas { get; set; }
+}
+
+/// <summary>
+/// Classe de conexões.
+/// </summary>
 public class ConnectionStrings
 {
     public string BaseDados { get; set; }
+    public string ServiceBus { get; set; }
 }
 
+/// <summary>
+/// Classe de config do swagger.
+/// </summary>
 public class SwaggerInfo
 {
     public string ApiDescription { get; set; }
@@ -32,6 +57,9 @@ public class SwaggerInfo
     public string UriMyGit { get; set; }
 }
 
+/// <summary>
+/// Classe de config diversas.
+/// </summary>
 public class Configuracoes
 {
     public int TimeOutDefault { get; set; }
@@ -42,6 +70,9 @@ public class Configuracoes
     public int QuantidadeMaximaDeRetentativas { get; set; }
 }
 
+/// <summary>
+/// Classe de config de e-mail.
+/// </summary>
 public class Email
 {
     public string From { get; set; }
@@ -50,6 +81,9 @@ public class Email
     public string Password { get; set; }
 }
 
+/// <summary>
+/// Clase de confi do Twillio.
+/// </summary>
 public class Twillio
 {
     public string TwillioWhatsappNumber { get; set; }

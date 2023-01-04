@@ -1,6 +1,8 @@
 using APPLICATION.APPLICATION.CONFIGURATIONS;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
+using Hangfire;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Serilog;
 
 try
@@ -42,13 +44,15 @@ try
         .ConfigureSerilog()
         .ConfigureHealthChecks(configurations)
         .ConfigureCors()
+        .ConfigureFluentSchedulerJobs()
+        .ConfigureHangFire(configurations)
         .AddControllers(options =>
         {
             options.EnableEndpointRouting = false;
 
             options.Filters.Add(new ProducesAttribute("application/json"));
 
-        });
+        }).AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
 
     // Preparando WebApplication Build.
     var applicationbuilder = builder.Build();
@@ -62,8 +66,9 @@ try
         .UseRouting()
         .UseCors("CorsPolicy")
         .UseResponseCaching()
-        .ConfigureHealthChecks()
-        .UseSwaggerConfigurations(configurations);
+        .UseHealthChecks()
+        .UseSwaggerConfigurations(configurations)
+        .UseHangfireDashboard();
 
     Log.Information($"[LOG INFORMATION] - Inicializando aplicação [TOOLS.MAIL.API]\n");
 

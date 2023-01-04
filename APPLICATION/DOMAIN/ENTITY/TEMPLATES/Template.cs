@@ -1,4 +1,4 @@
-﻿namespace APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES;
+﻿namespace APPLICATION.DOMAIN.ENTITY.TEMPLATES;
 
 /// <summary>
 /// Entidade de templates

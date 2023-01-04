@@ -1,8 +1,8 @@
-﻿using APPLICATION.DOMAIN.DTOS.TWILLIO;
+﻿using APPLICATION.DOMAIN.ENTITY.TWILLIO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace APPLICATION.INFRAESTRUTURE.CONTEXTO.CONFIGUREDATATYPES.TEMPLATES;
+namespace APPLICATION.INFRAESTRUTURE.CONTEXTO.CONFIGUREDATATYPES.TWILLIO;
 
 public class MessageTwillioTypesConfiguration : IEntityTypeConfiguration<MessageTwillio>
 {

@@ -1,10 +1,9 @@
-﻿using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
+﻿using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
 using APPLICATION.DOMAIN.DTOS.EMAIL;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
@@ -47,9 +46,9 @@ public class EmailFacade
         }
         catch (Exception exception)
         {
-            Log.Error("[LOG ERROR]\n", exception, exception.Message);
+            Log.Error($"[LOG ERROR] - {exception.Message}\n", exception, exception.Message);
 
-            throw new Exception(exception.Message);
+            throw;
         }
     }
 
@@ -91,9 +90,9 @@ public class EmailFacade
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - {exception.Message}\n");
+            Log.Error($"[LOG ERROR] - {exception.Message}\n", exception, exception.Message);
 
-            throw new Exception(exception.Message);
+            throw;
         }
     }
 
@@ -126,17 +125,15 @@ public class EmailFacade
         }
         catch (Exception exception)
         {
-            Log.Error($"[LOG ERROR] - {exception.Message}\n");
+            Log.Error($"[LOG ERROR] - {exception.Message}\n", exception, exception.Message);
 
-            throw new Exception(exception.Message);
+            throw;
         }
         finally
         {
             Log.Information($"[LOG INFORMATION] - Desconectando cliente.\n");
 
             client.Disconnect(true);
-
-            client.Dispose();
         }
     }
 
@@ -152,10 +149,19 @@ public class EmailFacade
     /// <exception cref="Exception"></exception>
     private async Task<string> GetTemplate(string templateName, string titulo, string conteudoTexto, string linkBotao, string textoBotao)
     {
-        var response = await _templateService.GetContentTemplateWithName(templateName);
+        try
+        {
+            var response = await _templateService.GetContentTemplateWithName(templateName);
 
-        if (response.Sucesso) return await Task.FromResult(response.Dados.Replace("__titulo__", titulo).Replace("__content__", conteudoTexto).Replace("__link-botao__", linkBotao).Replace("__texto-botao__", textoBotao));
+            if (response.Sucesso) return await Task.FromResult(response.Dados.Replace("__titulo__", titulo).Replace("__content__", conteudoTexto).Replace("__link-botao__", linkBotao).Replace("__texto-botao__", textoBotao));
 
-        throw new Exception("Nenhum template encontrado.");
+            return null;
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - {exception.Message}\n", exception, exception.Message);
+
+            throw;
+        }
     }
 }

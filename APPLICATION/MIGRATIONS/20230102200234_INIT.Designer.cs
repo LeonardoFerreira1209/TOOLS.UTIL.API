@@ -12,15 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APPLICATION.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20221119133248_INITIAL_UTIL_API")]
-    partial class INITIALUTILAPI
+    [Migration("20230102200234_INIT")]
+    partial class INIT
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -28,7 +28,7 @@ namespace APPLICATION.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES.Template", b =>
+            modelBuilder.Entity("APPLICATION.DOMAIN.ENTITY.TEMPLATES.Template", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace APPLICATION.Migrations
                     b.ToTable("Templates", (string)null);
                 });
 
-            modelBuilder.Entity("APPLICATION.DOMAIN.DTOS.TWILLIO.MessageTwillio", b =>
+            modelBuilder.Entity("APPLICATION.DOMAIN.ENTITY.TWILLIO.MessageTwillio", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

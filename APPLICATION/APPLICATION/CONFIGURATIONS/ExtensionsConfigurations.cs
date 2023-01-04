@@ -5,13 +5,24 @@ using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
 using APPLICATION.APPLICATION.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
+using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.NOTIFICATIONS.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
+using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using APPLICATION.INFRAESTRUTURE.FACADES.EMAIL;
+using APPLICATION.INFRAESTRUTURE.JOBS.FACTORY.FLUENTSCHEDULER;
+using APPLICATION.INFRAESTRUTURE.JOBS.FACTORY.HANGFIRE;
+using APPLICATION.INFRAESTRUTURE.JOBS.INTERFACES.BASE;
+using APPLICATION.INFRAESTRUTURE.JOBS.INTERFACES.RECURRENT;
+using APPLICATION.INFRAESTRUTURE.JOBS.RECURRENT;
 using APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 using APPLICATION.INFRAESTRUTURE.REPOSITORY.TWILLIO;
+using APPLICATION.INFRAESTRUTURE.SERVICEBUS.PROVIDER.BASE;
+using APPLICATION.INFRAESTRUTURE.SERVICEBUS.PROVIDER.USER;
+using APPLICATION.INFRAESTRUTURE.SERVICEBUS.SUBSCRIBER.USER;
+using Hangfire;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.AspNetCore.Extensions;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -232,7 +243,9 @@ public static class ExtensionsConfigurations
             .AddSingleton<EmailFacade>()
             // Repositories
             .AddScoped<ITemplateRepository, TemplateRepository>()
-            .AddScoped<ITwillioRepository, TwillioRepository>();
+            .AddScoped<ITwillioRepository, TwillioRepository>()
+            // Infra
+            .AddSingleton<IUserEmailServiceBusReceiverProvider, UserEmailServiceBusReceiverProvider>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -270,13 +283,71 @@ public static class ExtensionsConfigurations
     }
 
     /// <summary>
+    /// Registro de Jobs.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureFluentSchedulerJobs(this IServiceCollection services)
+    {
+        services.AddTransient<IFluentSchedulerJobs, FluentSchedulerJobs>();
+
+        services.AddTransient<IReceiveUserEmailToServiceBusJob, ReceiveUserEmailToServiceBusJob>();
+
+        services.ConfigureStartJobs();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configure Hangfire
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureHangFire(this IServiceCollection services, IConfiguration configurations)
+    {
+        services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170).UseSimpleAssemblyNameTypeSerializer().UseRecommendedSerializerSettings().UseSqlServerStorage(configurations.GetConnectionString("BaseDados")));
+
+        services.AddTransient<IHangfireJobs, HangfireJobs>();
+
+        // Add the processing server as IHostedService
+        services.AddHangfireServer();
+
+        services.GetProvider().GetService<IHangfireJobs>().RegistrarJobs();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Iniciar Jobs.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureStartJobs(this IServiceCollection services)
+    {
+        // Iniciar os Jobs.
+        new ScheduledTasksManager(services.GetProvider()).StartJobs();
+
+        return services;
+    }
+
+    // Configura os subscribers.
+    public static IServiceCollection ConfigureSubscribers(this IServiceCollection services)
+    {
+        services
+            //Subscribers
+            .AddTransient<UserSubscriber>();
+
+        return services;
+    }
+
+    /// <summary>
     /// Configuração do HealthChecks do sistema.
     /// </summary>
     /// <param name="application"></param>
     /// <returns></returns>
-    public static IApplicationBuilder ConfigureHealthChecks(this IApplicationBuilder application)
+    public static IApplicationBuilder UseHealthChecks(this IApplicationBuilder application)
     {
-        application.UseHealthChecks(ExtensionsConfigurations.HealthCheckEndpoint, new HealthCheckOptions
+        application.UseHealthChecks(HealthCheckEndpoint, new HealthCheckOptions
         {
             ResponseWriter = async (context, report) =>
             {
@@ -326,5 +397,15 @@ public static class ExtensionsConfigurations
             .UseMvcWithDefaultRoute();
 
         return application;
+    }
+
+    /// <summary>
+    /// Retorna um provider do service.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    private static ServiceProvider GetProvider(this IServiceCollection services)
+    {
+        return services.BuildServiceProvider();
     }
 }

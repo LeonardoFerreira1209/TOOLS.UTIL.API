@@ -1,6 +1,6 @@
-﻿using APPLICATION.DOMAIN.ENUM;
+﻿using APPLICATION.ENUMS;
 
-namespace APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+namespace APPLICATION.DOMAIN.DTOS.RESPONSE;
 
 /// <summary>
 /// Dados a ser retornado em uma notificação do sistema.

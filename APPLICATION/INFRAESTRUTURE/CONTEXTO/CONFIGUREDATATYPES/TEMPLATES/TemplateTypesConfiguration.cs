@@ -1,4 +1,4 @@
-﻿using APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES;
+﻿using APPLICATION.DOMAIN.ENTITY.TEMPLATES;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

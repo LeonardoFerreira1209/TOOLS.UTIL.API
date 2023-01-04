@@ -1,4 +1,4 @@
-﻿namespace APPLICATION.DOMAIN.DTOS.TWILLIO;
+﻿namespace APPLICATION.DOMAIN.ENTITY.TWILLIO;
 
 /// <summary>
 /// Classe de recebimento de parametos para o envio do sms.

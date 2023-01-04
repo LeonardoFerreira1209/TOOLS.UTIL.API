@@ -1,12 +1,10 @@
 ﻿using APPLICATION.DOMAIN.DTOS.RESPONSE;
-using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
-using APPLICATION.DOMAIN.ENUM;
 using APPLICATION.ENUMS;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using System.ComponentModel;
 
-namespace APPLICATION.DOMAIN.UTILS;
+namespace APPLICATION.DOMAIN.UTILS.EXTENSIONS;
 
 public static class Extensions
 {
@@ -18,7 +16,7 @@ public static class Extensions
 
         var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
 
-        return (attributes.Length > 0) ? (T)attributes[0] : null;
+        return attributes.Length > 0 ? (T)attributes[0] : null;
     }
 
     /// <summary>

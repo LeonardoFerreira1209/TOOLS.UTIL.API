@@ -1,14 +1,16 @@
-﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
+﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.NOTIFICATIONS.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
-using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using APPLICATION.DOMAIN.DTOS.RESPONSE;
 using APPLICATION.DOMAIN.DTOS.TWILLIO;
+using APPLICATION.ENUMS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Serilog;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
+using StatusCodes = APPLICATION.ENUMS.StatusCodes;
 
 namespace APPLICATION.APPLICATION.SERVICES.TWILLIO;
 
@@ -72,14 +74,14 @@ public class TwillioService : ITwillioService
             Log.Information($"[LOG INFORMATION] - Sms enviado com sucesso.\n");
 
             // retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Sms enviado com sucesso.\n") });
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Sms enviado com sucesso.\n") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
             // retorno error.
-            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+            return new ApiResponse<object>(false, StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 
@@ -115,14 +117,14 @@ public class TwillioService : ITwillioService
             Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
 
             // Retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.\n") });
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status sms retornado com sucesso.\n") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
             // Retorno error.
-            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+            return new ApiResponse<object>(false, StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 
@@ -170,14 +172,14 @@ public class TwillioService : ITwillioService
             Log.Information($"[LOG INFORMATION] - Whatsapp enviado com sucesso.\n");
 
             // Retorno sucesso.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Whatsapp enviado com sucesso.\n") });
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK, await Task.FromResult(message), new List<DadosNotificacao> { new DadosNotificacao("Whatsapp enviado com sucesso.\n") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
             // Retorno error.
-            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+            return new ApiResponse<object>(false, StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 
@@ -215,14 +217,14 @@ public class TwillioService : ITwillioService
             Log.Information($"Status sms salvo no banco: {JsonConvert.SerializeObject(statusSms)}");
 
             // Retorno success.
-            return new ApiResponse<object>(true, DOMAIN.ENUM.StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.\n") });
+            return new ApiResponse<object>(true, StatusCodes.SuccessOK, await Task.FromResult(statusSms), new List<DadosNotificacao> { new DadosNotificacao("Status whatsapp retornado com sucesso.\n") });
         }
         catch (Exception exception)
         {
             Log.Error($"[LOG ERROR] - {exception.Message}", exception, exception.Message);
 
             // Retorno error.
-            return new ApiResponse<object>(false, DOMAIN.ENUM.StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
+            return new ApiResponse<object>(false, StatusCodes.ServerErrorInternalServerError, new List<DadosNotificacao> { new DadosNotificacao(exception.Message) });
         }
     }
 }

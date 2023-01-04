@@ -1,12 +1,13 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
-using APPLICATION.DOMAIN.DTOS.REQUEST;
-using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
+using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE;
 using APPLICATION.DOMAIN.UTILS;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Serilog.Context;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Text;
 
 namespace TOOLS.UTIL.API.CONTROLLER.EMAIL
 {
@@ -24,26 +25,6 @@ namespace TOOLS.UTIL.API.CONTROLLER.EMAIL
         }
 
         /// <summary>
-        /// Método responsavel por enviar e-mail.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
-        [HttpPost("invite")][EnableCors("CorsPolicy")]
-        [SwaggerOperation(Summary = "Enviar e-mail.", Description = "Método responsavel por enviar e-mail.")]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        public async Task<ApiResponse<object>> Invite(MailRequest request)
-        {
-            using (LogContext.PushProperty("Controller", "EmailController"))
-            using (LogContext.PushProperty("Payload", JsonConvert.SerializeObject(request)))
-            using (LogContext.PushProperty("Metodo", "Invite"))
-            {
-                return await Tracker.Time(() => _emailService.Invite(request), "Enviar e-mail");
-            }
-        }
-
-        /// <summary>
         /// Método responsavel por fazer upload de um arquvivo html.
         /// </summary>
         /// <param name="request"></param>
@@ -53,9 +34,9 @@ namespace TOOLS.UTIL.API.CONTROLLER.EMAIL
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
-        public async Task<ApiResponse<object>> UploadTemplate(string name, string description, HttpRequest request)
+        public async Task<ApiResponse<object>> UploadTemplate(string name, string description, IFormFile formFile)
         {
-            using (var reader = new StreamReader(request.Body, System.Text.Encoding.UTF8))
+            using (var reader = new StreamReader(formFile.OpenReadStream(), Encoding.UTF8))
             {
                 string fileContent = await reader.ReadToEndAsync();
 

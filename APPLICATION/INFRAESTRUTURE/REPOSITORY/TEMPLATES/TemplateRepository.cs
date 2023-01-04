@@ -1,5 +1,5 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
-using APPLICATION.DOMAIN.DTOS.ENTITIES.TEMPLATES;
+using APPLICATION.DOMAIN.ENTITY.TEMPLATES;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -37,7 +37,6 @@ public class TemplateRepository : ITemplateRepository
         });
 
         await _contexto.SaveChangesAsync();
-
     }
 
     /// <summary>
@@ -47,10 +46,19 @@ public class TemplateRepository : ITemplateRepository
     /// <returns></returns>
     public async Task<string> GetContentTemplateWithName(string name)
     {
-        Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(GetContentTemplateWithName)}\n");
+        try
+        {
+            Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(GetContentTemplateWithName)}\n");
 
-        var template = await _contexto.Templates.FirstOrDefaultAsync(t => t.Name == name);
+            var template = await _contexto.Templates.FirstOrDefaultAsync(t => t.Name == name);
 
-        return template.Content;
+            return template.Content;
+        }
+        catch (Exception exception)
+        {
+            Log.Error($"[LOG ERROR] - {exception.Message}\n");
+
+            return null;
+        }
     }
 }
