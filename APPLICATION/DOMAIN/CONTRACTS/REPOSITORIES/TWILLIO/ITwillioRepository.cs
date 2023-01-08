@@ -1,6 +1,6 @@
 ﻿using APPLICATION.DOMAIN.DTOS.TWILLIO;
 
-namespace APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.NOTIFICATIONS.TWILLIO;
+namespace APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TWILLIO;
 
 /// <summary>
 /// Repositorio onde salva os registros de notificações.

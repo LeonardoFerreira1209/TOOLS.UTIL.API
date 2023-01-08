@@ -9,9 +9,9 @@ namespace APPLICATION.INFRAESTRUTURE.CONTEXTO;
 /// <summary>
 /// Classe de configuração do banco de dados.
 /// </summary>
-public class Contexto : DbContext
+public class Context : DbContext
 {
-    public Contexto(DbContextOptions<Contexto> options) : base(options)
+    public Context(DbContextOptions<Context> options) : base(options)
     {
         Database.EnsureCreated();
     }

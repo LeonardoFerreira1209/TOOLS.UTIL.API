@@ -5,8 +5,8 @@ using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
 using APPLICATION.APPLICATION.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
-using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.NOTIFICATIONS.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
+using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
@@ -171,7 +171,7 @@ public static class ExtensionsConfigurations
     public static IServiceCollection ConfigureContexto(this IServiceCollection services, IConfiguration configurations)
     {
         services
-            .AddDbContext<Contexto>(options => options.UseLazyLoadingProxies().UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
+            .AddDbContext<Context>(options => options.UseLazyLoadingProxies().UseSqlServer(configurations.GetValue<string>("ConnectionStrings:BaseDados")));
 
         return services;
     }

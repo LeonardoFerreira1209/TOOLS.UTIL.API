@@ -1,11 +1,7 @@
-﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.NOTIFICATIONS.TWILLIO;
-using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
+﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TWILLIO;
 using APPLICATION.DOMAIN.DTOS.TWILLIO;
 using APPLICATION.DOMAIN.ENTITY.TWILLIO;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace APPLICATION.INFRAESTRUTURE.REPOSITORY.TWILLIO;
@@ -15,11 +11,11 @@ namespace APPLICATION.INFRAESTRUTURE.REPOSITORY.TWILLIO;
 /// </summary>
 public class TwillioRepository : ITwillioRepository
 {
-    private readonly Contexto _contexto;
+    private readonly Context _context;
 
-    public TwillioRepository(Contexto contexto)
+    public TwillioRepository(Context context)
     {
-        _contexto = contexto;
+        _context = context;
     }
 
     /// <summary>
@@ -31,31 +27,31 @@ public class TwillioRepository : ITwillioRepository
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TwillioRepository)} - METHOD {nameof(Save)}\n");
 
-        await _contexto.MessagesTwillio.AddAsync(new MessageTwillio
+        await _context.MessagesTwillio.AddAsync(new MessageTwillio
         {
-           AccountSid = statusSmsRequest.AccountSid,
-           ApiVersion = statusSmsRequest.ApiVersion,
-           Body = statusSmsRequest.Body,
-           From = statusSmsRequest.From,
-           To = statusSmsRequest.To,
-           MessageId = statusSmsRequest.MessageId,
-           MessageStatus = statusSmsRequest.MessageStatus,
-           SmsSid = statusSmsRequest.SmsSid,
-           SmsStatus = statusSmsRequest.SmsStatus,
-           DateCreated = statusSmsRequest.DateCreated,
-           DateSent = statusSmsRequest.DateSent,
-           DateUpdated = statusSmsRequest.DateUpdated,
-           ErrorCode = statusSmsRequest.ErrorCode,
-           ErrorMessage = statusSmsRequest.ErrorMessage,
-           NumMedia = statusSmsRequest.NumMedia,
-           NumSegments = statusSmsRequest.NumSegments,
-           Price = statusSmsRequest.Price,
-           PriceUnit = statusSmsRequest.PriceUnit,
-           Sid = statusSmsRequest.Sid,
-           ProfileName = statusSmsRequest.ProfileName,
-           MediaUrl = statusSmsRequest.MediaUrl
+            AccountSid = statusSmsRequest.AccountSid,
+            ApiVersion = statusSmsRequest.ApiVersion,
+            Body = statusSmsRequest.Body,
+            From = statusSmsRequest.From,
+            To = statusSmsRequest.To,
+            MessageId = statusSmsRequest.MessageId,
+            MessageStatus = statusSmsRequest.MessageStatus,
+            SmsSid = statusSmsRequest.SmsSid,
+            SmsStatus = statusSmsRequest.SmsStatus,
+            DateCreated = statusSmsRequest.DateCreated,
+            DateSent = statusSmsRequest.DateSent,
+            DateUpdated = statusSmsRequest.DateUpdated,
+            ErrorCode = statusSmsRequest.ErrorCode,
+            ErrorMessage = statusSmsRequest.ErrorMessage,
+            NumMedia = statusSmsRequest.NumMedia,
+            NumSegments = statusSmsRequest.NumSegments,
+            Price = statusSmsRequest.Price,
+            PriceUnit = statusSmsRequest.PriceUnit,
+            Sid = statusSmsRequest.Sid,
+            ProfileName = statusSmsRequest.ProfileName,
+            MediaUrl = statusSmsRequest.MediaUrl
         });
 
-        await _contexto.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }

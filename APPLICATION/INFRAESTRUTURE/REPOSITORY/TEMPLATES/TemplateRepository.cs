@@ -11,11 +11,11 @@ namespace APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 /// </summary>
 public class TemplateRepository : ITemplateRepository
 {
-    private readonly Contexto _contexto;
+    private readonly Context _context;
 
-    public TemplateRepository(Contexto contexto) 
+    public TemplateRepository(Context context)
     {
-        _contexto = contexto;
+        _context = context;
     }
 
     /// <summary>
@@ -29,14 +29,14 @@ public class TemplateRepository : ITemplateRepository
     {
         Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(Save)}\n");
 
-        await _contexto.Templates.AddAsync(new Template
+        await _context.Templates.AddAsync(new Template
         {
             Name = name,
             Description = description,
             Content = fileContent
         });
 
-        await _contexto.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public class TemplateRepository : ITemplateRepository
         {
             Log.Information($"[LOG INFORMATION] - SET TITLE {nameof(TemplateRepository)} - METHOD {nameof(GetContentTemplateWithName)}\n");
 
-            var template = await _contexto.Templates.FirstOrDefaultAsync(t => t.Name == name);
+            var template = await _context.Templates.FirstOrDefaultAsync(t => t.Name == name);
 
             return template.Content;
         }
