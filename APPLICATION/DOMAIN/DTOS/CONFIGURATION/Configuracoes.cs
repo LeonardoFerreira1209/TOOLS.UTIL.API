@@ -14,6 +14,7 @@ public class AppSettings
     public ServiceBus ServiceBus { get; set; }
     public Email Email { get; set; }
     public Twillio Twillio { get; set; }
+    public UrlBase UrlBase { get; set; }
 }
 
 /// <summary>
@@ -90,4 +91,9 @@ public class Twillio
     public string TwillioPhoneNumber { get; set; }
     public string TwillioAccountSID { get; set; }
     public string TwillioAuthToken { get; set; }
+}
+
+public class UrlBase
+{
+    public string CHATGPT_BASE_URL { get; set; } 
 }

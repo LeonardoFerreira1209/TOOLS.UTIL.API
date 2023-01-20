@@ -3,6 +3,7 @@ using APPLICATION.APPLICATION.CONFIGURATIONS.SWAGGER;
 using APPLICATION.APPLICATION.SERVICES.EMAIL;
 using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
 using APPLICATION.APPLICATION.SERVICES.TWILLIO;
+using APPLICATION.DOMAIN.CONTRACTS.API.OPENAPI;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
@@ -37,6 +38,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Refit;
 using Serilog;
 using Serilog.Events;
 using System.Globalization;
@@ -248,6 +250,19 @@ public static class ExtensionsConfigurations
             .AddSingleton<IUserEmailServiceBusReceiverProvider, UserEmailServiceBusReceiverProvider>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configura chamadas a APIS externas através do Refit.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection ConfigureRefit(this IServiceCollection services, IConfiguration configurations)
+    {
+        services
+            .AddRefitClient<IOpenApiExternal>().ConfigureHttpClient(c => c.BaseAddress = configurations.GetValue<Uri>("UrlBase:CHATGPT_BASE_URL"));
 
         return services;
     }

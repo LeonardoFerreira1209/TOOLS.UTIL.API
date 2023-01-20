@@ -30,7 +30,8 @@ try
         .ConfigureContexto(configurations)
         .ConfigureApllicationCookie()
         .ConfigureSwagger(configurations)
-        .ConfigureDependencies(configurations, builder.Environment);
+        .ConfigureDependencies(configurations, builder.Environment)
+        .ConfigureRefit(configurations);
 
     // Se for em produção executa.
     if (builder.Environment.IsProduction())
