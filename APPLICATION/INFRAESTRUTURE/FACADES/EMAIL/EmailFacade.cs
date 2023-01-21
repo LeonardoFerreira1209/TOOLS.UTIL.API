@@ -17,6 +17,11 @@ public class EmailFacade
 
     private readonly ITemplateService _templateService;
 
+    /// <summary>
+    /// Construtor com parametros.
+    /// </summary>
+    /// <param name="appsettings"></param>
+    /// <param name="templateService"></param>
     public EmailFacade(IOptions<AppSettings> appsettings, ITemplateService templateService)
     {
         _appsettings = appsettings;

@@ -1,7 +1,7 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
-using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.ENUMS;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -10,7 +10,7 @@ using Serilog;
 namespace APPLICATION.APPLICATION.SERVICES.TEMPLATE;
 
 /// <summary>
-/// Serviço de usuários.
+/// Serviço de templates.
 /// </summary>
 public class TemplateService : ITemplateService
 {

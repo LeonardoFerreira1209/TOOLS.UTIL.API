@@ -1,6 +1,7 @@
 ﻿using APPLICATION.APPLICATION.CONFIGURATIONS.APPLICATIONINSIGHTS;
 using APPLICATION.APPLICATION.CONFIGURATIONS.SWAGGER;
 using APPLICATION.APPLICATION.SERVICES.EMAIL;
+using APPLICATION.APPLICATION.SERVICES.FILE;
 using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
 using APPLICATION.APPLICATION.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.API.OPENAPI;
@@ -9,6 +10,7 @@ using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.EMAIL;
+using APPLICATION.DOMAIN.CONTRACTS.SERVICES.FILE;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TEMPLATE;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 using APPLICATION.INFRAESTRUTURE.CONTEXTO;
@@ -20,7 +22,6 @@ using APPLICATION.INFRAESTRUTURE.JOBS.INTERFACES.RECURRENT;
 using APPLICATION.INFRAESTRUTURE.JOBS.RECURRENT;
 using APPLICATION.INFRAESTRUTURE.REPOSITORY.TEMPLATES;
 using APPLICATION.INFRAESTRUTURE.REPOSITORY.TWILLIO;
-using APPLICATION.INFRAESTRUTURE.SERVICEBUS.PROVIDER.BASE;
 using APPLICATION.INFRAESTRUTURE.SERVICEBUS.PROVIDER.USER;
 using APPLICATION.INFRAESTRUTURE.SERVICEBUS.SUBSCRIBER.USER;
 using Hangfire;
@@ -241,6 +242,7 @@ public static class ExtensionsConfigurations
             .AddTransient<ITwillioService, TwillioService>()
             .AddTransient<IEmailService, EmailService>()
             .AddTransient<ITemplateService, TemplateService>()
+            .AddTransient<IFileService, FileService>()
             // Facades
             .AddSingleton<EmailFacade>()
             // Repositories
@@ -422,5 +424,17 @@ public static class ExtensionsConfigurations
     private static ServiceProvider GetProvider(this IServiceCollection services)
     {
         return services.BuildServiceProvider();
+    }
+
+    /// <summary>
+    /// Verifica se o tipo de arquivo é aceito.
+    /// </summary>
+    /// <param name="fileType"></param>
+    /// <returns></returns>
+    public static bool FileTypesAllowed(this string fileType)
+    {
+        var typesAllowed = new List<string> { "image/jpeg", "image/jpg", "image/png", "image/gif" };
+
+        return typesAllowed.Select(types => types.Equals(fileType)).Any(verify => verify is true);
     }
 }

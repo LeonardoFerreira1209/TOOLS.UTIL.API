@@ -14,6 +14,7 @@ public class AppSettings
     public ServiceBus ServiceBus { get; set; }
     public Email Email { get; set; }
     public Twillio Twillio { get; set; }
+    public AzureStorage AzureStorage { get; set; }
     public UrlBase UrlBase { get; set; }
 }
 
@@ -37,6 +38,16 @@ public class ServiceBus
     public string SubscriptionExemploName { get; set; }
     public int TempoReagendamentoMinutos { get; set; }
     public int QuantidadeMaximaDeRetentativas { get; set; }
+}
+
+/// <summary>
+/// Classe de config do blob storage.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public class AzureStorage
+{
+    public string ConnectionStringAzureStorageKey { get; set; }
+    public string Container { get; set; }
 }
 
 /// <summary>
@@ -93,6 +104,9 @@ public class Twillio
     public string TwillioAuthToken { get; set; }
 }
 
+/// <summary>
+/// URL de APIS ou sistemas parceiros.
+/// </summary>
 public class UrlBase
 {
     public string CHATGPT_BASE_URL { get; set; } 

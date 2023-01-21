@@ -1,4 +1,4 @@
-﻿using APPLICATION.DOMAIN.DTOS.RESPONSE;
+﻿using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.ENUMS;
 using FluentValidation.Results;
 using Newtonsoft.Json;

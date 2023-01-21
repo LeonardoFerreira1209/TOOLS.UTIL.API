@@ -1,6 +1,6 @@
 ﻿using APPLICATION.ENUMS;
 
-namespace APPLICATION.DOMAIN.DTOS.RESPONSE;
+namespace APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 
 /// <summary>
 /// Dados a ser retornado em uma notificação do sistema.
@@ -21,13 +21,29 @@ public class DadosNotificacao
 /// <typeparam name="T"></typeparam>
 public class ApiResponse<T> where T : class
 {
+    /// <summary>
+    /// Construtor padrão
+    /// </summary>
     public ApiResponse() { }
 
+    /// <summary>
+    /// Construtor com parametros.
+    /// </summary>
+    /// <param name="sucesso"></param>
+    /// <param name="statusCode"></param>
+    /// <param name="notificacaos"></param>
     public ApiResponse(bool sucesso, StatusCodes statusCode, List<DadosNotificacao> notificacaos = null)
     {
         Sucesso = sucesso; StatusCode = statusCode; Notificacoes = notificacaos;
     }
 
+    /// <summary>
+    /// Construtor com parametros.
+    /// </summary>
+    /// <param name="sucesso"></param>
+    /// <param name="statusCode"></param>
+    /// <param name="dados"></param>
+    /// <param name="notificacoes"></param>
     public ApiResponse(bool sucesso, StatusCodes statusCode, T dados = null, List<DadosNotificacao> notificacoes = null)
     {
         Sucesso = sucesso; StatusCode = statusCode; Dados = dados; Notificacoes = notificacoes;

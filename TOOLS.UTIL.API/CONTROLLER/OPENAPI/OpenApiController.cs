@@ -1,14 +1,15 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.API.OPENAPI;
 using APPLICATION.DOMAIN.DTOS.REQUEST.OPENAPI;
-using APPLICATION.DOMAIN.DTOS.RESPONSE;
 using APPLICATION.DOMAIN.DTOS.RESPONSE.OPENAPI;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace TOOLS.UTIL.API.CONTROLLER.CONFIG;
+namespace TOOLS.UTIL.API.CONTROLLER.OPENAPI;
 
-[Route("api/[controller]")][ApiController]
+[Route("api/[controller]")]
+[ApiController]
 public class OpenApiController : ControllerBase
 {
     private readonly IOpenApiExternal _openApiExternal;
@@ -23,7 +24,8 @@ public class OpenApiController : ControllerBase
     /// </summary>
     /// <param name="question"></param>
     /// <returns></returns>
-    [HttpPost("completions")][EnableCors("CorsPolicy")]
+    [HttpPost("completions")]
+    [EnableCors("CorsPolicy")]
     [SwaggerOperation(Summary = "Requisição a api de completions.", Description = "Método responsavel por fazer requisição a api de completions.")]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]

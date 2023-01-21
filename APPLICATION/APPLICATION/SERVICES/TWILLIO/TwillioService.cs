@@ -1,9 +1,8 @@
 ﻿using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TWILLIO;
 using APPLICATION.DOMAIN.CONTRACTS.SERVICES.TWILLIO;
 using APPLICATION.DOMAIN.DTOS.CONFIGURATION;
-using APPLICATION.DOMAIN.DTOS.RESPONSE;
+using APPLICATION.DOMAIN.DTOS.RESPONSE.UTILS;
 using APPLICATION.DOMAIN.DTOS.TWILLIO;
-using APPLICATION.ENUMS;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -15,7 +14,7 @@ using StatusCodes = APPLICATION.ENUMS.StatusCodes;
 namespace APPLICATION.APPLICATION.SERVICES.TWILLIO;
 
 /// <summary>
-/// Serviço de sms.
+/// Serviço da twillio.
 /// </summary>
 public class TwillioService : ITwillioService
 {
