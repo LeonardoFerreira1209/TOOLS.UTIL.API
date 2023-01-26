@@ -104,7 +104,7 @@ jobs:
           Twillio.TwillioPhoneNumber: ${{ secrets.__TWILLIO_PHONE_NUMBER__ }}
           Twillio.TwillioAccountSID: ${{ secrets.__TWILLIO_ACCOUNT_SID__ }}
           Twillio.TwillioAuthToken: ${{ secrets.__TWILLIO_AUTH_TOKEN__ }}
-          ServiceBus.QueueUserEmail: ${{ secrets.__QUEUE_USER_EMAIL__ }}
+          ServiceBus.QueueEmail: ${{ secrets.__QUEUE_EMAIL__ }}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
