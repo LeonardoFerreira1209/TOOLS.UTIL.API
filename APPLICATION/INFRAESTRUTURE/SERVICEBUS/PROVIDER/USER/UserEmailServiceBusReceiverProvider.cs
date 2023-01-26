@@ -13,5 +13,5 @@ public class UserEmailServiceBusReceiverProvider : ServiceBusReceiverProviderBas
     /// Construtor.
     /// </summary>
     /// <param name="configuracoes"></param>
-    public UserEmailServiceBusReceiverProvider(IOptions<AppSettings> configuracoes) : base(configuracoes.Value.ConnectionStrings.ServiceBus, configuracoes.Value.ServiceBus.QueueUserEmail) { }
+    public UserEmailServiceBusReceiverProvider(IOptions<AppSettings> configuracoes) : base(configuracoes.Value.ConnectionStrings.ServiceBus, configuracoes.Value.ServiceBus.QueueEmail) { }
 }
