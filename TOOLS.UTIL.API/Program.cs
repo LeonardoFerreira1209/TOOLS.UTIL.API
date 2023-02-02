@@ -75,12 +75,12 @@ try
             Authorization = new[] { new CustomAuthorizeHangfireFilter() }
         });
 
-    Log.Information($"[LOG INFORMATION] - Inicializando aplicação [TOOLS.MAIL.API]\n");
+    Log.Information($"[LOG INFORMATION] - Inicializando aplicação [TOOLS.UTIL.API]\n");
 
     // Iniciando a aplicação com todas as configurações já carregadas.
     applicationbuilder.Run();
 }
 catch (Exception exception)
 {
-    Log.Error("[LOG ERROR] - Ocorreu um erro ao inicializar a aplicacao [TOOLS.MAIL.API]\n", exception.Message);
+    Log.Error("[LOG ERROR] - Ocorreu um erro ao inicializar a aplicacao [TOOLS.UTIL.API]\n", exception.Message);
 }
