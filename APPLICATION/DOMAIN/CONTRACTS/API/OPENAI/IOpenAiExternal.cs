@@ -2,12 +2,12 @@
 using APPLICATION.DOMAIN.DTOS.RESPONSE.OPENAPI;
 using Refit;
 
-namespace APPLICATION.DOMAIN.CONTRACTS.API.OPENAPI;
+namespace APPLICATION.DOMAIN.CONTRACTS.API.OPENAI;
 
 /// <summary>
 /// Interface de chamada do ChatGPT com o Refit.
 /// </summary>
-public interface IOpenApiExternal
+public interface IOpenAiExternal
 {
     /// <summary>
     /// Chama a API de Completions do ChatGpt
@@ -16,5 +16,5 @@ public interface IOpenApiExternal
     /// <param name="chatGptCompletionsRequest"></param>
     /// <returns></returns>
     [Post("/v1/completions")]
-    Task<OpenApiCompletionsResponse> SendQuestion([Header("Authorization")] string apiKey, [Body] OpenApiCompletionsRequest chatGptCompletionsRequest);
+    Task<OpenAiCompletionsResponse> SendQuestion([Header("Authorization")] string apiKey, [Body] OpenAiCompletionsRequest chatGptCompletionsRequest);
 }

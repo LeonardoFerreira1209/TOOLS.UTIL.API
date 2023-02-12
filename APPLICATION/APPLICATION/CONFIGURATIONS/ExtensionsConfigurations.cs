@@ -4,7 +4,7 @@ using APPLICATION.APPLICATION.SERVICES.EMAIL;
 using APPLICATION.APPLICATION.SERVICES.FILE;
 using APPLICATION.APPLICATION.SERVICES.TEMPLATE;
 using APPLICATION.APPLICATION.SERVICES.TWILLIO;
-using APPLICATION.DOMAIN.CONTRACTS.API.OPENAPI;
+using APPLICATION.DOMAIN.CONTRACTS.API.OPENAI;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS;
 using APPLICATION.DOMAIN.CONTRACTS.CONFIGURATIONS.APPLICATIONINSIGHTS;
 using APPLICATION.DOMAIN.CONTRACTS.REPOSITORIES.TEMPLATES;
@@ -264,7 +264,7 @@ public static class ExtensionsConfigurations
     public static IServiceCollection ConfigureRefit(this IServiceCollection services, IConfiguration configurations)
     {
         services
-            .AddRefitClient<IOpenApiExternal>().ConfigureHttpClient(c => c.BaseAddress = configurations.GetValue<Uri>("UrlBase:CHATGPT_BASE_URL"));
+            .AddRefitClient<IOpenAiExternal>().ConfigureHttpClient(c => c.BaseAddress = configurations.GetValue<Uri>("UrlBase:CHATGPT_BASE_URL"));
 
         return services;
     }

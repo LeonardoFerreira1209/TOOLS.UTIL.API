@@ -5,7 +5,7 @@ namespace APPLICATION.DOMAIN.DTOS.REQUEST.OPENAPI;
 /// <summary>
 /// Classe response por ter os dados de envio para API de Completions do OpenApi.
 /// </summary>
-public class OpenApiCompletionsRequest
+public class OpenAiCompletionsRequest
 {
     /// <summary>
     /// ID do modelo a ser usado. Você pode usar a API de modelos de lista para ver todos os seus modelos disponíveis ou consultar nossa visão geral do modelo para obter as descrições deles.

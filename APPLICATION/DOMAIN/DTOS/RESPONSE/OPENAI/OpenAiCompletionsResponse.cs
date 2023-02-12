@@ -5,7 +5,7 @@ namespace APPLICATION.DOMAIN.DTOS.RESPONSE.OPENAPI;
 /// <summary>
 /// Response da Api de completions do chatGPT.
 /// </summary>
-public class OpenApiCompletionsResponse
+public class OpenAiCompletionsResponse
 {
     /// <summary>
     /// Id de retorno da API.
